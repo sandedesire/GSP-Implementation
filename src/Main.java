@@ -196,7 +196,7 @@ public class Main {
         round4(logs.getLast());
         round5(logs.getLast());
         getWinnerSubSequenceForm(logs);
-        System.out.println(winners);
+        processWinnerSubsequences(winners);
 
 
 
@@ -556,6 +556,35 @@ public class Main {
             }
         }
 
+    }
+
+    public static void processWinnerSubsequences(List<List<String>> winnersSubsequencs){
+        for(List<String> x: winnersSubsequencs){
+            List<UserBasket> allUsers = new ArrayList<>();
+            for(UserBasket ub : userBasketDatabase){
+                if(ub.allItemsEverBought.containsAll(x)){
+                    allUsers.add(ub);
+
+                }
+
+            }
+            System.out.println("ALL USERS WHO BOUGHT:"+x);
+            for(UserBasket u: allUsers){
+                System.out.println(u.userID);
+                System.out.println(u.itemToAllTimeStamp);
+
+
+            }
+            //TimeStamp Combination for all users who bought a certain sequence
+            //Deleting all map entries that do not contain x elements as key
+
+
+
+
+
+
+
+        }
     }
     
 
