@@ -668,7 +668,7 @@ public class Main {
         List<Confidence> toDelete = new ArrayList<>();
         for(Confidence x : sequences){
 
-            if(x.confidenceValue < minConf){
+            if(x.confidenceValue < minConf || x.postfix.equals(x.prefix)){
                 toDelete.add(x);
 
             }
