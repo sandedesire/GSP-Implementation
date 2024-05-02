@@ -677,6 +677,7 @@ public class Main {
             //System.out.println("Element Deleted is: "+ y.itemsJoined);
             sequences.remove(y);
         }
+
     }
 
     public static float subConditionalProbability(List<String> subElement){
