@@ -13,8 +13,13 @@ public class Main {
     public static  Set<String> uniqueTimestamp = new HashSet<>();
     public static  List<SubSequence> sequences = new ArrayList<>();
     public static  List<List<SubSequence>> logs = new ArrayList<>();
-    public static  float minSup = (float)0.2;
+    public static  float minSup = (float)0.3;
+    public static  float minConf = (float)0.8;
+
     public static  List<List<String>> winners = new ArrayList<>();
+    public static  Set<String> confidence = new HashSet<>();
+    public static  List<List<String>> confidenceCombinations = new ArrayList<>();
+    public static  List<Confidence> confidenceObjects = new ArrayList<>();
 
 
     public static void main(String[] args) {
@@ -196,7 +201,24 @@ public class Main {
         round4(logs.getLast());
         round5(logs.getLast());
         getWinnerSubSequenceForm(logs);
-        processWinnerSubsequences(winners);
+        //Will Finish it's implementation in future versions
+        //processWinnerSubsequences(winners);
+
+        //Calculate Confidence
+        calculateConfidence(winners);
+        System.out.println(confidenceCombinations);
+
+        //Printing the Confidence Objects
+        for(Confidence c : confidenceObjects){
+            System.out.println("Prefix:"+ c.prefix);
+            System.out.println("Postfix:"+ c.postfix);
+            System.out.println("PrefAndPos:"+ c.prefAndPos);
+            System.out.println(c.prefix+" ------->"+c.postfix+" with Confidence:"+
+                    c.confidenceValue);
+            System.out.println("------------------------------------------------");
+
+
+        }
 
 
 
@@ -576,7 +598,7 @@ public class Main {
 
             }
             //TimeStamp Combination for all users who bought a certain sequence
-            //Deleting all map entries that do not contain x elements as key
+
 
 
 
@@ -588,4 +610,174 @@ public class Main {
     }
     
 
+    public static void calculateConfidence(List<List<String>> winnerItems){
+        for(List<String> list : winnerItems){
+            for(String x : list){
+                confidence.add(x);
+            }
+        }
+        System.out.println("We are Calculating Confidence using the items:"+ confidence);
+        //Adding all unique elements to confidenceCombination
+        for(String x : confidence){
+            List<String> elem = new ArrayList<>();
+            elem.add(x);
+            confidenceCombinations.add(elem);
+        }
+
+        supTwo(confidence);
+        supThree(confidence);
+        supFour(confidence);
+        supFive(confidence);
+
+        System.out.println("Creating the Confidence Objects...");
+        for(List<String> prefix : confidenceCombinations){
+            for(List<String> postfix : confidenceCombinations){
+                Confidence confidence1 = new Confidence(prefix,postfix);
+                confidenceObjects.add(confidence1);
+            }
+        }
+        System.out.println("Combining Prefix and Postfix in a set");
+        for(Confidence c:confidenceObjects){
+            Set<String> s = new HashSet<>();
+            for(String e1:c.prefix){
+                s.add(e1);
+            }
+
+            for(String e2:c.postfix){
+                s.add(e2);
+            }
+
+            List<String> s1 = new ArrayList<>(s);
+            c.prefAndPos = s1;
+
+        }
+
+        System.out.println("Calculating Confidence");
+        for(Confidence conf: confidenceObjects){
+            conf.confidenceValue = (float)((float)subConditionalProbability(conf.prefAndPos) / (float)subConditionalProbability(conf.postfix));
+        }
+        pruneConf(confidenceObjects);
+
+
+
+
+
+    }
+
+    public static void pruneConf(List<Confidence> sequences){
+        List<Confidence> toDelete = new ArrayList<>();
+        for(Confidence x : sequences){
+
+            if(x.confidenceValue < minConf){
+                toDelete.add(x);
+
+            }
+        }
+        for(Confidence y : toDelete){
+            //System.out.println("Element Deleted is: "+ y.itemsJoined);
+            sequences.remove(y);
+        }
+    }
+
+    public static float subConditionalProbability(List<String> subElement){
+        int count = 0;
+        for(UserBasket ub : userBasketDatabase){
+            if(ub.allItemsEverBought.containsAll(subElement)){
+                count = count + 1;
+            }
+
+        }
+
+        return (float)count/userBasketDatabase.size();
+    }
+
+    public static  void supTwo(Set<String> element){
+        List<String> elements = new ArrayList<>(element);
+        for(int i =0; i<elements.size() ; i++){
+            for(int j = i+1; j<elements.size();j++){
+                //System.out.println("Elements are :"+ elements.get(i)+elements.get(j));
+                List<String> elem = new ArrayList<>();
+                elem.add(elements.get(i));
+                elem.add(elements.get(j));
+
+                confidenceCombinations.add(elem);
+
+
+            }
+        }
+    }
+
+    public static  void supThree(Set<String> element){
+        List<String> elements = new ArrayList<>(element);
+        for(int i =0; i<elements.size() ; i++){
+            for(int j = i+1; j<elements.size();j++){
+                for(int k = j+1; k<elements.size();k++){
+                    //System.out.println("Elements are :"+ elements.get(i)+elements.get(j));
+                    List<String> elem = new ArrayList<>();
+                    elem.add(elements.get(i));
+                    elem.add(elements.get(j));
+                    elem.add(elements.get(k));
+
+                    confidenceCombinations.add(elem);
+                }
+
+
+
+            }
+        }
+    }
+
+    public static  void supFour(Set<String> element){
+        List<String> elements = new ArrayList<>(element);
+        for(int i =0; i<elements.size() ; i++){
+            for(int j = i+1; j<elements.size();j++){
+                for(int k = j+1; k<elements.size();k++){
+                    for(int l = k+1; l<elements.size();l++){
+                        //System.out.println("Elements are :"+ elements.get(i)+elements.get(j));
+                        List<String> elem = new ArrayList<>();
+                        elem.add(elements.get(i));
+                        elem.add(elements.get(j));
+                        elem.add(elements.get(k));
+                        elem.add(elements.get(l));
+
+                        confidenceCombinations.add(elem);
+                    }
+
+                }
+
+
+
+            }
+        }
+    }
+
+    public static  void supFive(Set<String> element){
+        List<String> elements = new ArrayList<>(element);
+        for(int i =0; i<elements.size() ; i++){
+            for(int j = i+1; j<elements.size();j++){
+                for(int k = j+1; k<elements.size();k++){
+                    for(int l = k+1; l<elements.size();l++){
+                        for(int n = l+1;n<elements.size();n++){
+                            //System.out.println("Elements are :"+ elements.get(i)+elements.get(j));
+                            List<String> elem = new ArrayList<>();
+                            elem.add(elements.get(i));
+                            elem.add(elements.get(j));
+                            elem.add(elements.get(k));
+                            elem.add(elements.get(l));
+                            elem.add(elements.get(n));
+
+
+
+                            confidenceCombinations.add(elem);
+                        }
+
+                    }
+
+                }
+
+
+
+            }
+        }
+    }
 }

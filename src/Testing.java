@@ -1,12 +1,15 @@
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 
 public class Testing {
+    public static  List<List<String>> confidenceCombinations = new ArrayList<>();
+
     public static void main(String[] args) {
-        List<String> one = new ArrayList<>();
+        Set<String> one = new HashSet<>();
         one.add("A");
         one.add("B");
         one.add("C");
@@ -27,8 +30,10 @@ public class Testing {
         }
 
          */
-        //combineTwo(one);
+        combineTwo(one);
         //combineFive(one);
+        System.out.println(confidenceCombinations);
+
 
     }
     public static  void combineTwo(Set<String> element){
@@ -36,6 +41,13 @@ public class Testing {
         for(int i =0; i<elements.size() ; i++){
             for(int j = i+1; j<elements.size();j++){
                 System.out.println("Elements are :"+ elements.get(i)+elements.get(j));
+                List<String> elem = new ArrayList<>();
+                elem.add(elements.get(i));
+                elem.add(elements.get(j));
+
+                confidenceCombinations.add(elem);
+
+
             }
         }
     }
