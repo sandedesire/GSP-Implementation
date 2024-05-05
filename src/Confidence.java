@@ -5,7 +5,7 @@ public class Confidence {
     public List<String> prefix = new ArrayList<>();
     public List<String> postfix = new ArrayList<>();
     public List<String> prefAndPos = new ArrayList<>();
-    public double confidenceValue;
+    public float confidenceValue;
 
     public Confidence(List<String> prefix, List<String> postfix) {
         this.postfix = postfix;
@@ -40,7 +40,7 @@ public class Confidence {
         this.postfix = postfix;
     }
 
-    public void setConfidenceValue(double confidenceValue) {
+    public void setConfidenceValue(float confidenceValue) {
         this.confidenceValue = confidenceValue;
     }
 }

@@ -7,6 +7,7 @@ import java.util.*;
 
 
 public class Testing {
+    private static String OS = null;
     public static  List<List<String>> confidenceCombinations = new ArrayList<>();
     public static DateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm");
 
@@ -56,6 +57,8 @@ public class Testing {
         catch (Exception e){
             e.printStackTrace();
         }
+        String os = getOsName();
+        System.out.println("Operating System is:"+os);
 
 
     }
@@ -153,6 +156,15 @@ public class Testing {
             firstJoin.add(new SubSequence(xitems));
         }
         return  firstJoin;
+    }
+    public static String getOsName()
+    {
+        if(OS == null) { OS = System.getProperty("os.name"); }
+        return OS;
+    }
+    public static boolean isWindows()
+    {
+        return getOsName().startsWith("Windows");
     }
 
 }
