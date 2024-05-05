@@ -2,10 +2,20 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 
 public class Main {
+    public static DateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+
+    public static  int UserIDColumn = 0;
+    public static  int ItemColumn = 1;
+    public static  int TimeStampColumn = 2;
+
     public static  List<UserData> database = new ArrayList<>();
     public static  List<UserBasket> userBasketDatabase = new ArrayList<>();
     public static  Set<String> uniqueIDs = new HashSet<>();
@@ -21,6 +31,10 @@ public class Main {
     public static  List<List<String>> confidenceCombinations = new ArrayList<>();
     public static  List<Confidence> confidenceObjects = new ArrayList<>();
 
+    public static  Date start = new Date();
+    public static  Date end;
+
+
 
     public static void main(String[] args) {
 
@@ -32,8 +46,12 @@ public class Main {
 
 
 
+
+
         File resourceFile = new File("/home/maitre/Downloads/" +
                 "ClassicAssociationDiscoveryGroundTruthData.csv");
+
+
 
 
         System.out.println("GSP Implementation");
@@ -51,8 +69,17 @@ public class Main {
             while ((line = br.readLine()) != null)   //returns a Boolean value
             {
                 String[] entry = line.split(splitBy);
-                UserData userData = new UserData(entry[0],entry[1],entry[2]);
-                //UserData userData = new UserData(entry[0],entry[2],entry[4]);
+
+
+                UserData userData = new UserData(entry[UserIDColumn],
+                        entry[ItemColumn],
+                        entry[TimeStampColumn]);
+
+
+
+
+                // UserIDColumn = 6, ItemColumn = 2, TimeStampColumn = 4
+                //UserData userData = new UserData(entry[6],entry[2],entry[4]);
 
                 database.add(userData);
             }
@@ -64,22 +91,26 @@ public class Main {
 
         //Testing our Database
 
+        /*
         for (UserData x : database){
             System.out.println(x.getUserID());
             System.out.println(x.getItemDescription());
             System.out.println(x.getTimeStamp());
         }
 
+         */
+
         //Data Cleaning. TO BE IMPLEMENTED
+       dataCleaning(database);
 
 
 
 
         //Collecting UniqueIDs and UniqueItems
         setUniqueIDsAndItemsAndTimestamp(database);
-        System.out.println("ALL UNIQUE IDS AND ITEMS");
-        System.out.println(uniqueIDs);
-        System.out.println(uniqueITems);
+        //System.out.println("ALL UNIQUE IDS AND ITEMS");
+        //System.out.println(uniqueIDs);
+        //System.out.println(uniqueITems);
 
         //Creating our List of UserBasket making use of UniqueIds
         for(String x : uniqueIDs){
@@ -87,8 +118,8 @@ public class Main {
         }
 
         //Viewing the size of ALL our users
-        System.out.println("SIZE OF USERBASKET LIST");
-        System.out.println(userBasketDatabase.size());
+        System.out.println("SIZE OF USERBASKET LIST:" +userBasketDatabase.size());
+
 
         //Setting all items each user ever bought and All Timestamp
         setAllItemsEachUserEverboughtAndAllTimeStamp(database,
@@ -97,19 +128,19 @@ public class Main {
         System.out.println(userBasketDatabase.get(2).getAllItemsEverBought());
         System.out.println(userBasketDatabase.get(2).getUsersTimeStamp());
 
-        /*
-        for(UserBasket ub: userBasketDatabase) {
-            setAllUsersMap(ub.allItemsEverBought,ub.usersTimeStamp,database);
-        }
-        */
+
 
         setAllUsersMap(database,userBasketDatabase);
         System.out.println("Checking all users item to timestamp and timestamp to item");
         for(UserBasket x : userBasketDatabase){
+            System.out.println("User with ID:" + x.getUserID());
             System.out.println(x.getItemToAllTimeStamp());
             System.out.println(x.getTimeStampToAllItems());
+            System.out.println("----------------------------------------------------------");
 
         }
+
+        //Saving PreProcessed data. TO BE IMPLEMENTED
 
         //Joining and Pruning Phase
         //Making the subsequences
@@ -122,76 +153,15 @@ public class Main {
         logs.add(sequences);
 
         //Printing our initial List of Sequneces
-        System.out.println("Printing our initial List of Sequneces");
+        System.out.println("Printing our initial List of Sequences");
         for(SubSequence x : logs.getLast()){
-            System.out.println(x.itemsJoined);
-            System.out.println(x.support);
-        }
-
-        /*
-        //Continue Coding From Here
-        //Write Functions to 1. Calculate Support 2. Prune 3. Join
-        //In the above order
-
-        calculateSupport(userBasketDatabase,logs.getLast());
-        //Testing the support function
-        System.out.println("After Calculating the support");
-        for(SubSequence x : logs.getLast()){
-            System.out.println(x.itemsJoined);
-            System.out.println(x.support);
-        }
-
-        //Testing the Pruning Function
-        prune(logs.getLast(),(float)0.3);
-        System.out.println("After Pruning. ");
-        for(SubSequence x : logs.getLast()){
-            System.out.println(x.itemsJoined);
-            System.out.println(x.support);
-        }
-
-        /*
-        //Testing  the Join Function
-        List<SubSequence> joined = initialJoin(logs.getLast());
-        System.out.println("After First Join");
-        for(SubSequence x : logs.getLast()){
-            System.out.println(x.itemsJoined);
-            System.out.println(x.support);
-        }
-
-
-        //Refine the Join and Support functions
-        //Check the bookmark java list combinations
-        combineTwo(logs.getLast());
-        System.out.println("After CombineTwo. ");
-        for(SubSequence x : logs.getLast()){
-            System.out.println(x.itemsJoined);
-            System.out.println(x.support);
-        }
-        //Calculating Support
-        calculateSupport(userBasketDatabase,logs.getLast());
-        System.out.println("After Calculating Support 2. ");
-        for(SubSequence x : logs.getLast()){
-            System.out.println(x.itemsJoined);
-            System.out.println(x.support);
-        }
-
-        combineThree(logs.getLast());
-        System.out.println("After CombineThree. ");
-        for(SubSequence x : logs.getLast()){
-            System.out.println(x.itemsJoined);
-            System.out.println(x.support);
-        }
-        //Calculating Support
-        calculateSupport(userBasketDatabase,logs.getLast());
-        System.out.println("After Calculating Support 3. ");
-        for(SubSequence x : logs.getLast()){
-            System.out.println(x.itemsJoined);
-            System.out.println(x.support);
+            System.out.println(x.itemsJoined+" has Support"+x.support);
+            System.out.println("-------------------------------------");
         }
 
 
 
-         */
+
 
         System.out.println("------------------GSP----------------------------------------");
 
@@ -229,6 +199,13 @@ public class Main {
 
 
 
+
+
+
+        System.out.println("Running Time Statistics");
+        System.out.println("Start:"+start);
+        end = new Date();
+        System.out.println("End:"+end);
 
 
     }
@@ -780,5 +757,55 @@ public class Main {
 
             }
         }
+    }
+
+    public static void dataCleaning(List<UserData> database){
+        //Verifying the empty objects
+        int countNull =0;
+        List<UserData> toDelete = new ArrayList<>();
+        List<UserData> toDelete2 = new ArrayList<>();
+
+        for(UserData ud : database){
+            if(ud.getUserID().isEmpty() || ud.getTimeStamp().isEmpty() ||
+                    ud.getItemDescription().isEmpty()){
+                countNull= countNull+1;
+                toDelete.add(ud);
+            }
+        }
+        for(UserData td: toDelete){
+            database.remove(td);
+        }
+
+
+
+        for(UserData user : database){
+            try {
+                Date date = df.parse(user.getTimeStamp());
+
+                /*
+                System.out.println(date);
+                LocalDateTime local_date_time =
+                        date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                System.out.println(local_date_time);
+
+                 */
+
+
+            }
+            catch (Exception e){
+                toDelete2.add(user);
+            }
+        }
+
+        for(UserData td2: toDelete2){
+            database.remove(td2);
+        }
+        int sum = toDelete2.size() + toDelete.size();
+
+        System.out.println("This amount of user Data was deleted:"+ sum);
+
+
+
+
     }
 }

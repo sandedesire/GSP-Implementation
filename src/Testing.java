@@ -1,12 +1,15 @@
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
 
 
 public class Testing {
     public static  List<List<String>> confidenceCombinations = new ArrayList<>();
+    public static DateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+
 
     public static void main(String[] args) {
         Set<String> one = new HashSet<>();
@@ -33,6 +36,26 @@ public class Testing {
         combineTwo(one);
         //combineFive(one);
         System.out.println(confidenceCombinations);
+
+        //Testing the conversion of a  string to a datetime object according to formatter
+        String datetime_string = "01-12-2010 09:01";
+        String datetime_string_empty = "";
+        String datetime_string_error = "%^^&^01-12-2010 09:01";
+
+
+        try {
+            Date date = df.parse(datetime_string);
+
+            System.out.println(date);
+            LocalDateTime local_date_time =
+                    date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            System.out.println(local_date_time);
+
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
 
     }
