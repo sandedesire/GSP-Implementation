@@ -25,8 +25,8 @@ public class Main {
     public static  Set<String> uniqueTimestamp = new HashSet<>();
     public static  List<SubSequence> sequences = new ArrayList<>();
     public static  List<List<SubSequence>> logs = new ArrayList<>();
-    public static  float minSup = (float)0.5;
-    public static  float minConf = (float)0.8;
+    public static  float minSup = (float)0.16;
+    public static  float minConf = (float)0.45;
 
     public static  List<List<String>> winners = new ArrayList<>();
     public static  Set<String> confidence = new HashSet<>();
@@ -44,7 +44,7 @@ public class Main {
 
         //Parsing the CSV file to get data
         //File resourceFile = new File("/home/maitre/Documents/GSPTestData.csv");
-        //File resourceFile = new File("/home/maitre/Downloads/archive/OnlineRetail.csv");
+        File resourceFile = new File("/home/maitre/Downloads/archive/OnlineRetail.csv");
 
 
 
@@ -52,8 +52,11 @@ public class Main {
 
 
 
+        /*
         File resourceFile = new File("/home/maitre/Downloads/" +
                 "ClassicAssociationDiscoveryGroundTruthData.csv");
+
+         */
 
 
 
@@ -76,15 +79,19 @@ public class Main {
                 String[] entry = line.split(splitBy);
 
 
+                /*
                 UserData userData = new UserData(entry[UserIDColumn],
                         entry[ItemColumn],
                         entry[TimeStampColumn]);
 
 
+                 */
+
+
 
 
                 // UserIDColumn = 6, ItemColumn = 2, TimeStampColumn = 4
-                //UserData userData = new UserData(entry[6],entry[2],entry[4]);
+                UserData userData = new UserData(entry[6],entry[2],entry[4]);
 
                 database.add(userData);
             }
@@ -136,6 +143,7 @@ public class Main {
 
 
 
+        /* MIGHT NEED TO UNCOMMENT THIS
         setAllUsersMap(database,userBasketDatabase);
         System.out.println("Checking all users item to timestamp and timestamp to item");
         stringBuilder.append("Checking all users item to timestamp and timestamp to item\n");
@@ -152,6 +160,8 @@ public class Main {
 
 
         }
+
+         */
 
 
 
@@ -170,6 +180,7 @@ public class Main {
         logs.add(sequences);
 
         //Printing our initial List of Sequneces
+        /*
         System.out.println("Printing our initial List of Sequences");
         stringBuilder.append("Printing our initial List of Sequences\n");
         for(SubSequence x : logs.getLast()){
@@ -179,6 +190,8 @@ public class Main {
             stringBuilder.append(x.itemsJoined+" has Support"+x.support +"\n");
             stringBuilder.append("-------------------------------------\n");
         }
+
+         */
 
 
 
@@ -191,19 +204,21 @@ public class Main {
         round3(logs.getLast());
         round4(logs.getLast());
         round5(logs.getLast());
-        //Printing all elements in logs
-        for(List<SubSequence> l : logs){
-            System.out.println("logs has :"+l);
-            System.out.println("Size of logs:"+logs.size());
 
-        }
         getWinnerSubSequenceForm(logs);
         //Will Finish it's implementation in future versions
         //processWinnerSubsequences(winners);
 
         //Calculate Confidence
+
         calculateConfidence(winners);
         System.out.println(confidenceCombinations);
+
+
+
+
+
+
 
         //Printing the Confidence Objects
         for(Confidence c : confidenceObjects){
@@ -510,8 +525,8 @@ public class Main {
             }
         }
         for(SubSequence y : toDelete){
-            System.out.println("Element Deleted is: "+ y.itemsJoined);
-            stringBuilder.append("Element Deleted is: "+ y.itemsJoined+"\n");
+            //System.out.println("Element Deleted is: "+ y.itemsJoined);
+            //stringBuilder.append("Element Deleted is: "+ y.itemsJoined+"\n");
             sequences.remove(y);
         }
         logs.add(sequences);
@@ -733,7 +748,7 @@ public class Main {
         for(Confidence x : sequences){
 
             if(x.confidenceValue < minConf || x.postfix.equals(x.prefix)
-            || x.postfix.containsAll(x.prefix)){
+            || x.postfix.containsAll(x.prefix)  || x.prefix.containsAll(x.postfix)){
                 toDelete.add(x);
 
             }

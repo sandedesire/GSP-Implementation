@@ -1,0 +1,62 @@
+EFFICIENT GSP IMPLEMENTATION ON LARGE DATASET BY KOM SAMUEL @LUXEMBOURG UNIVERSITY
+
+-----------------------------------------------------------------------------------
+Header is: [InvoiceNo, StockCode, Description, Quantity, InvoiceDate, UnitPrice, CustomerID, Country]
+This amount of rows user Data was deleted:138187
+SIZE OF USERBASKET LIST:4370
+General Statistics After Round 1
+Sub Sequence of form:[REGENCY CAKESTAND 3 TIER] has Support: 0.20297483
+Sub Sequence of form:[WHITE HANGING HEART T-LIGHT HOLDER] has Support: 0.19633867
+Sub Sequence of form:[PARTY BUNTING] has Support: 0.16201372
+----------------------------------------------------------
+General Statistics After Round 2
+----------------------------------------------------------
+General Statistics After Round 3
+----------------------------------------------------------
+General Statistics After Round 4
+----------------------------------------------------------
+General Statistics After Round 5
+----------------------------------------------------------
+The Winning Subsequence(s) is/are:
+Sequence: [REGENCY CAKESTAND 3 TIER] has support: 0.20297483
+Sequence: [WHITE HANGING HEART T-LIGHT HOLDER] has support: 0.19633867
+Sequence: [PARTY BUNTING] has support: 0.16201372
+We are Calculating Confidence using the items:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+Creating the Confidence Objects...
+Combining Prefix and Postfix in a set
+------------------------------------------------
+Calculating Confidence
+There are:6 rules generated.
+Prefix:[REGENCY CAKESTAND 3 TIER]
+Postfix:[WHITE HANGING HEART T-LIGHT HOLDER, PARTY BUNTING]
+PrefAndPos:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+Buying:[WHITE HANGING HEART T-LIGHT HOLDER, PARTY BUNTING] -------> Also Buying:[REGENCY CAKESTAND 3 TIER] with Confidence:0.46666667
+------------------------------------------------
+Prefix:[PARTY BUNTING]
+Postfix:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER]
+PrefAndPos:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+Buying:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER] -------> Also Buying:[PARTY BUNTING] with Confidence:0.45419848
+------------------------------------------------
+Prefix:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER]
+Postfix:[WHITE HANGING HEART T-LIGHT HOLDER, PARTY BUNTING]
+PrefAndPos:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+Buying:[WHITE HANGING HEART T-LIGHT HOLDER, PARTY BUNTING] -------> Also Buying:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER] with Confidence:0.46666667
+------------------------------------------------
+Prefix:[WHITE HANGING HEART T-LIGHT HOLDER, PARTY BUNTING]
+Postfix:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER]
+PrefAndPos:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+Buying:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER] -------> Also Buying:[WHITE HANGING HEART T-LIGHT HOLDER, PARTY BUNTING] with Confidence:0.45419848
+------------------------------------------------
+Prefix:[REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+Postfix:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER]
+PrefAndPos:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+Buying:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER] -------> Also Buying:[REGENCY CAKESTAND 3 TIER, PARTY BUNTING] with Confidence:0.45419848
+------------------------------------------------
+Prefix:[REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+Postfix:[WHITE HANGING HEART T-LIGHT HOLDER, PARTY BUNTING]
+PrefAndPos:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+Buying:[WHITE HANGING HEART T-LIGHT HOLDER, PARTY BUNTING] -------> Also Buying:[REGENCY CAKESTAND 3 TIER, PARTY BUNTING] with Confidence:0.46666667
+------------------------------------------------
+Running Time Statistics
+Start:Wed May 08 19:55:36 CEST 2024
+End:Wed May 08 19:56:56 CEST 2024
