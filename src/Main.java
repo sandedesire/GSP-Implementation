@@ -9,6 +9,7 @@ import java.util.*;
 public class Main {
 
     public static File resultFile;
+
     public static String pathToResult;
     public static StringBuilder stringBuilder = new StringBuilder();
     public static DateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm");
@@ -24,7 +25,7 @@ public class Main {
     public static  Set<String> uniqueTimestamp = new HashSet<>();
     public static  List<SubSequence> sequences = new ArrayList<>();
     public static  List<List<SubSequence>> logs = new ArrayList<>();
-    public static  float minSup = (float)0.3;
+    public static  float minSup = (float)0.5;
     public static  float minConf = (float)0.8;
 
     public static  List<List<String>> winners = new ArrayList<>();
@@ -152,7 +153,7 @@ public class Main {
 
         }
 
-        //Saving PreProcessed data. TO BE IMPLEMENTED
+
 
 
 
@@ -190,6 +191,12 @@ public class Main {
         round3(logs.getLast());
         round4(logs.getLast());
         round5(logs.getLast());
+        //Printing all elements in logs
+        for(List<SubSequence> l : logs){
+            System.out.println("logs has :"+l);
+            System.out.println("Size of logs:"+logs.size());
+
+        }
         getWinnerSubSequenceForm(logs);
         //Will Finish it's implementation in future versions
         //processWinnerSubsequences(winners);
@@ -203,14 +210,14 @@ public class Main {
             System.out.println("Prefix:"+ c.prefix);
             System.out.println("Postfix:"+ c.postfix);
             System.out.println("PrefAndPos:"+ c.prefAndPos);
-            System.out.println(c.postfix+" ------->"+c.prefix+" with Confidence:"+
+            System.out.println("Buying:"+c.postfix+" -------> Also Buying:"+c.prefix+" with Confidence:"+
                     c.confidenceValue);
             System.out.println("------------------------------------------------");
 
             stringBuilder.append("Prefix:"+ c.prefix+"\n");
             stringBuilder.append("Postfix:"+ c.postfix+"\n");
             stringBuilder.append("PrefAndPos:"+ c.prefAndPos+"\n");
-            stringBuilder.append(c.postfix+" ------->"+c.prefix+" with Confidence:"+
+            stringBuilder.append("Buying:"+c.postfix+" -------> Also Buying:"+c.prefix+" with Confidence:"+
                     c.confidenceValue+"\n");
             stringBuilder.append("------------------------------------------------\n");
 
@@ -600,24 +607,33 @@ public class Main {
     }
 
     public static void getWinnerSubSequenceForm(List<List<SubSequence>> l){
-        for(int i = l.size() - 1;i<l.size();i--){
-            if(l.get(i).size() != 0){
-                System.out.println("The Winning Subsequence(s) is/are:");
-                stringBuilder.append("The Winning Subsequence(s) is/are:\n");
-                for(SubSequence s : l.get(i)){
-                    System.out.println("Sequence: "+ s.itemsJoined+
-                            " has support: "+s.support);
-                    stringBuilder.append("Sequence: "+ s.itemsJoined+
-                            " has support: "+s.support+"\n");
-                    winners.add(s.itemsJoined);
+
+
+            for(int i = l.size() - 1;i<l.size();i--){
+                if(i==-1){
+                    System.out.println("Size of Winning Subsequence is 0");
+                    stringBuilder.append("Size of Winning Subsequence is 0\n");
+                    return;
                 }
-                return;
+                if(!(l.get(i).isEmpty())){
+                    System.out.println("The Winning Subsequence(s) is/are:");
+                    stringBuilder.append("The Winning Subsequence(s) is/are:\n");
+                    for(SubSequence s : l.get(i)){
+                        System.out.println("Sequence: "+ s.itemsJoined+
+                                " has support: "+s.support);
+                        stringBuilder.append("Sequence: "+ s.itemsJoined+
+                                " has support: "+s.support+"\n");
+                        winners.add(s.itemsJoined);
+                    }
+                    return;
 
 
+                }
             }
+
         }
 
-    }
+
 
     public static void processWinnerSubsequences(List<List<String>> winnersSubsequencs){
         for(List<String> x: winnersSubsequencs){
@@ -696,11 +712,15 @@ public class Main {
         }
 
         System.out.println("Calculating Confidence");
+        System.out.println("------------------------------------------------");
+        stringBuilder.append("------------------------------------------------\n");
         stringBuilder.append("Calculating Confidence\n");
         for(Confidence conf: confidenceObjects){
             conf.confidenceValue = (float)(subConditionalProbability(conf.prefAndPos) / subConditionalProbability(conf.postfix));
         }
         pruneConf(confidenceObjects);
+        System.out.println("There are:"+confidenceObjects.size()+" rules generated.");
+        stringBuilder.append("There are:"+confidenceObjects.size()+" rules generated.\n");
 
 
 
@@ -712,7 +732,8 @@ public class Main {
         List<Confidence> toDelete = new ArrayList<>();
         for(Confidence x : sequences){
 
-            if(x.confidenceValue < minConf || x.postfix.equals(x.prefix)){
+            if(x.confidenceValue < minConf || x.postfix.equals(x.prefix)
+            || x.postfix.containsAll(x.prefix)){
                 toDelete.add(x);
 
             }
@@ -878,4 +899,6 @@ public class Main {
 
 
     }
+
+
 }
