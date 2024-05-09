@@ -3,7 +3,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
+
+import static java.lang.Math.abs;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 
 public class Main {
@@ -25,8 +29,9 @@ public class Main {
     public static  Set<String> uniqueTimestamp = new HashSet<>();
     public static  List<SubSequence> sequences = new ArrayList<>();
     public static  List<List<SubSequence>> logs = new ArrayList<>();
-    public static  float minSup = (float)0.16;
-    public static  float minConf = (float)0.45;
+    //minSup >= 0.15 and minConf >=0.3 in GUI code
+    public static  float minSup = (float)0.3;
+    public static  float minConf = (float)0.75;
 
     public static  List<List<String>> winners = new ArrayList<>();
     public static  Set<String> confidence = new HashSet<>();
@@ -44,7 +49,7 @@ public class Main {
 
         //Parsing the CSV file to get data
         //File resourceFile = new File("/home/maitre/Documents/GSPTestData.csv");
-        File resourceFile = new File("/home/maitre/Downloads/archive/OnlineRetail.csv");
+        //File resourceFile = new File("/home/maitre/Downloads/archive/OnlineRetail.csv");
 
 
 
@@ -52,11 +57,11 @@ public class Main {
 
 
 
-        /*
+
         File resourceFile = new File("/home/maitre/Downloads/" +
                 "ClassicAssociationDiscoveryGroundTruthData.csv");
 
-         */
+
 
 
 
@@ -79,19 +84,19 @@ public class Main {
                 String[] entry = line.split(splitBy);
 
 
-                /*
+
                 UserData userData = new UserData(entry[UserIDColumn],
                         entry[ItemColumn],
                         entry[TimeStampColumn]);
 
 
-                 */
+
 
 
 
 
                 // UserIDColumn = 6, ItemColumn = 2, TimeStampColumn = 4
-                UserData userData = new UserData(entry[6],entry[2],entry[4]);
+                //UserData userData = new UserData(entry[6],entry[2],entry[4]);
 
                 database.add(userData);
             }
@@ -113,7 +118,11 @@ public class Main {
          */
 
         //Data Cleaning. TO BE IMPLEMENTED
-       dataCleaning(database);
+        System.out.println("Number of rows Before data cleaning:"+database.size());
+        stringBuilder.append("Number of rows Before data cleaning:"+database.size()+"\n");
+        dataCleaning(database);
+        System.out.println("Number of rows After data cleaning:"+database.size());
+        stringBuilder.append("Number of rows After data cleaning:"+database.size()+"\n");
 
 
 
@@ -141,10 +150,12 @@ public class Main {
         System.out.println(userBasketDatabase.get(2).getAllItemsEverBought());
         System.out.println(userBasketDatabase.get(2).getUsersTimeStamp());
 
-
-
-        /* MIGHT NEED TO UNCOMMENT THIS
         setAllUsersMap(database,userBasketDatabase);
+
+
+
+
+
         System.out.println("Checking all users item to timestamp and timestamp to item");
         stringBuilder.append("Checking all users item to timestamp and timestamp to item\n");
         for(UserBasket x : userBasketDatabase){
@@ -153,15 +164,16 @@ public class Main {
             System.out.println(x.getTimeStampToAllItems());
             System.out.println("----------------------------------------------------------");
 
-            stringBuilder.append("User with ID:" + x.getUserID()+"\n");
-            stringBuilder.append(x.getItemToAllTimeStamp()+"\n");
-            stringBuilder.append(x.getTimeStampToAllItems()+"\n");
-            stringBuilder.append("----------------------------------------------------------\n");
+            //stringBuilder.append("User with ID:" + x.getUserID()+"\n");
+            //stringBuilder.append(x.getItemToAllTimeStamp()+"\n");
+            //stringBuilder.append(x.getTimeStampToAllItems()+"\n");
+            //stringBuilder.append("----------------------------------------------------------\n");
 
 
         }
 
-         */
+
+
 
 
 
@@ -213,6 +225,13 @@ public class Main {
 
         calculateConfidence(winners);
         System.out.println(confidenceCombinations);
+        stringBuilder.append(confidenceCombinations+"\n");
+
+        //DETERMINING THE MINIMUM TIMEDIFFERENCE AMONG THE RULES
+        isolateRespetiveUsers();
+        getPrefixTimeStamp();
+        getPostfixTimeStamp();
+
 
 
 
@@ -222,18 +241,43 @@ public class Main {
 
         //Printing the Confidence Objects
         for(Confidence c : confidenceObjects){
+            LocalDateTime minPos = getMinDateTime(c.posTimeFrame);
+            LocalDateTime minPref = getMinDateTime(c.prefTimeFrame);
+            long days = ChronoUnit.DAYS.between(minPref, minPos);
+
             System.out.println("Prefix:"+ c.prefix);
             System.out.println("Postfix:"+ c.postfix);
             System.out.println("PrefAndPos:"+ c.prefAndPos);
+
             System.out.println("Buying:"+c.postfix+" -------> Also Buying:"+c.prefix+" with Confidence:"+
                     c.confidenceValue);
-            System.out.println("------------------------------------------------");
+
+
+
+            System.out.print("All users who bought PrefAndPos:");
+            stringBuilder.append("All users who bought PrefAndPos:\n");
+            for(UserBasket ub : c.prefAndPosUsers){
+                System.out.print(ub.getUserID()+",");
+                stringBuilder.append(ub.getUserID()+",");
+
+            }
+            System.out.println("\nPrefix TimeFrame:"+c.prefTimeFrame);
+            System.out.println("Postfix TimeFrame:"+c.posTimeFrame);
+            System.out.println("Minimum TimeDiffrerence is:"+abs(days)+" days!");
+
+
+
+            System.out.println("\n------------------------------------------------");
 
             stringBuilder.append("Prefix:"+ c.prefix+"\n");
             stringBuilder.append("Postfix:"+ c.postfix+"\n");
             stringBuilder.append("PrefAndPos:"+ c.prefAndPos+"\n");
             stringBuilder.append("Buying:"+c.postfix+" -------> Also Buying:"+c.prefix+" with Confidence:"+
                     c.confidenceValue+"\n");
+            stringBuilder.append("\nPrefix TimeFrame:"+c.prefTimeFrame+"\n");
+            stringBuilder.append("Postfix TimeFrame:"+c.posTimeFrame+"\n");
+            stringBuilder.append("Minimum TimeDiffrerence is:"+abs(days)+" days!\n");
+
             stringBuilder.append("------------------------------------------------\n");
 
 
@@ -914,6 +958,95 @@ public class Main {
 
 
     }
+
+    public static void isolateRespetiveUsers(){
+        if(!confidenceObjects.isEmpty()){
+            for(Confidence c : confidenceObjects){
+                for(UserBasket ub : userBasketDatabase){
+                    if(ub.allItemsEverBought.containsAll(c.prefAndPos)){
+                        c.prefAndPosUsers.add(ub);
+                    }
+                }
+            }
+        }
+    }
+
+    public static void getPrefixTimeStamp(){
+        for(Confidence c : confidenceObjects){
+            for(String s : c.prefix){
+                for(UserBasket ub : c.prefAndPosUsers){
+                    for (Map<String, List<String>> map : ub.itemToAllTimeStamp) {
+                        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+                            String key = entry.getKey();
+                            List<String> value = entry.getValue();
+
+                            if(key.equals(s)){
+                                c.prefTimeFrame.addAll(value);
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+    public static void getPostfixTimeStamp(){
+        for(Confidence c : confidenceObjects){
+            for(String s : c.postfix){
+                for(UserBasket ub : c.prefAndPosUsers){
+                    for (Map<String, List<String>> map : ub.itemToAllTimeStamp) {
+                        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+                            String key = entry.getKey();
+                            List<String> value = entry.getValue();
+
+                            if(key.equals(s)){
+                                c.posTimeFrame.addAll(value);
+
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+
+    }
+
+    public static LocalDateTime getMinDateTime(List<String> dates){
+        LocalDateTime minDateTime = LocalDateTime.now();
+        try{
+            Date min = df.parse(dates.getFirst());
+            minDateTime = min.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime();
+
+        }catch (Exception e){
+            System.out.println("Error wile trying to get minimum date");
+
+        }
+        for(String s : dates){
+            try {
+                Date date = df.parse(s);
+                LocalDateTime currentDateTime = date.toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime();
+                if(currentDateTime.isBefore(minDateTime)){
+                    minDateTime = currentDateTime;
+
+                }
+
+            }catch (Exception e){
+                System.out.println("Error while finding minimum date");
+            }
+
+        }
+        return minDateTime;
+
+    }
+
+
 
 
 }

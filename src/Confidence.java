@@ -7,6 +7,14 @@ public class Confidence {
     public List<String> prefAndPos = new ArrayList<>();
     public float confidenceValue;
 
+    public List<UserBasket> prefAndPosUsers = new ArrayList<>();
+    public List<String> prefTimeFrame = new ArrayList<>();
+    public List<String> posTimeFrame = new ArrayList<>();
+    public List<String> timeDifferences = new ArrayList<>();
+    public String minTimeDifference;
+
+
+
     public Confidence(List<String> prefix, List<String> postfix) {
         this.postfix = postfix;
         this.prefix = prefix;
@@ -42,5 +50,45 @@ public class Confidence {
 
     public void setConfidenceValue(float confidenceValue) {
         this.confidenceValue = confidenceValue;
+    }
+
+    public List<UserBasket> getPrefAndPosUsers() {
+        return prefAndPosUsers;
+    }
+
+    public void setPrefAndPosUsers(List<UserBasket> prefAndPosUsers) {
+        this.prefAndPosUsers = prefAndPosUsers;
+    }
+
+    public List<String> getPrefTimeFrame() {
+        return prefTimeFrame;
+    }
+
+    public void setPrefTimeFrame(List<String> prefTimeFrame) {
+        this.prefTimeFrame = prefTimeFrame;
+    }
+
+    public List<String> getPosTimeFrame() {
+        return posTimeFrame;
+    }
+
+    public void setPosTimeFrame(List<String> posTimeFrame) {
+        this.posTimeFrame = posTimeFrame;
+    }
+
+    public List<String> getTimeDifferences() {
+        return timeDifferences;
+    }
+
+    public void setTimeDifferences(List<String> timeDifferences) {
+        this.timeDifferences = timeDifferences;
+    }
+
+    public String getMinTimeDifference() {
+        return minTimeDifference;
+    }
+
+    public void setMinTimeDifference(String minTimeDifference) {
+        this.minTimeDifference = minTimeDifference;
     }
 }

@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.ZoneId;
 import java.util.*;
 
@@ -47,10 +48,11 @@ public class Testing {
         try {
             Date date = df.parse(datetime_string);
 
+
             System.out.println(date);
             LocalDateTime local_date_time =
                     date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-            System.out.println(local_date_time);
+            System.out.println("Local Date Time:"+local_date_time);
 
 
         }
@@ -157,13 +159,11 @@ public class Testing {
         }
         return  firstJoin;
     }
-    public static String getOsName()
-    {
+    public static String getOsName() {
         if(OS == null) { OS = System.getProperty("os.name"); }
         return OS;
     }
-    public static boolean isWindows()
-    {
+    public static boolean isWindows() {
         return getOsName().startsWith("Windows");
     }
 
