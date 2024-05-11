@@ -32,6 +32,7 @@ public class Main {
     //minSup >= 0.15 and minConf >=0.3 in GUI code
     public static  float minSup = (float)0.3;
     public static  float minConf = (float)0.75;
+    public static  int minTimeDiff = 28;
 
     public static  List<List<String>> winners = new ArrayList<>();
     public static  Set<String> confidence = new HashSet<>();
@@ -58,8 +59,11 @@ public class Main {
 
 
 
+
         File resourceFile = new File("/home/maitre/Downloads/" +
                 "ClassicAssociationDiscoveryGroundTruthData.csv");
+
+
 
 
 
@@ -85,9 +89,12 @@ public class Main {
 
 
 
+
                 UserData userData = new UserData(entry[UserIDColumn],
                         entry[ItemColumn],
                         entry[TimeStampColumn]);
+
+
 
 
 
@@ -116,6 +123,36 @@ public class Main {
         }
 
          */
+
+        //Running Parameters
+        System.out.println("-----------------------------------");
+        System.out.println("Minimum Confidence:"+minConf);
+        System.out.println("-----------------------------------");
+        System.out.println("Minimum Support:"+minSup);
+
+
+        System.out.println("-----------------------------------");
+
+        System.out.println("Minimum Time Difference:"+minTimeDiff);
+        System.out.println("That is, every rule generated with a time diffrerence ");
+        System.out.println("greater than "+minTimeDiff+" days will be deleted");
+        System.out.println("-----------------------------------");
+
+
+        stringBuilder.append("-----------------------------------\n");
+        stringBuilder.append("Minimum Confidence:"+minConf+"\n");
+        stringBuilder.append("-----------------------------------\n");
+        stringBuilder.append("Minimum Support:"+minSup+"\n");
+        stringBuilder.append("-----------------------------------\n");
+
+        stringBuilder.append("Minimum Time Difference:"+minTimeDiff+"\n");
+        stringBuilder.append("That is, every rule generated with a time diffrerence ");
+        stringBuilder.append("greater than "+minTimeDiff+" days will be deleted\n");
+        stringBuilder.append("-----------------------------------\n");
+
+
+
+
 
         //Data Cleaning. TO BE IMPLEMENTED
         System.out.println("Number of rows Before data cleaning:"+database.size());
@@ -238,12 +275,11 @@ public class Main {
 
 
 
+        saveMinTimeDifference();
+        pruneTimeDiff(confidenceObjects);
 
         //Printing the Confidence Objects
         for(Confidence c : confidenceObjects){
-            LocalDateTime minPos = getMinDateTime(c.posTimeFrame);
-            LocalDateTime minPref = getMinDateTime(c.prefTimeFrame);
-            long days = ChronoUnit.DAYS.between(minPref, minPos);
 
             System.out.println("Prefix:"+ c.prefix);
             System.out.println("Postfix:"+ c.postfix);
@@ -255,7 +291,7 @@ public class Main {
 
 
             System.out.print("All users who bought PrefAndPos:");
-            stringBuilder.append("All users who bought PrefAndPos:\n");
+            stringBuilder.append("All users who bought PrefAndPos:");
             for(UserBasket ub : c.prefAndPosUsers){
                 System.out.print(ub.getUserID()+",");
                 stringBuilder.append(ub.getUserID()+",");
@@ -263,20 +299,20 @@ public class Main {
             }
             System.out.println("\nPrefix TimeFrame:"+c.prefTimeFrame);
             System.out.println("Postfix TimeFrame:"+c.posTimeFrame);
-            System.out.println("Minimum TimeDiffrerence is:"+abs(days)+" days!");
+            System.out.println("Minimum Time Diffrerence is:"+c.minTimeDifference+" days!");
 
 
 
             System.out.println("\n------------------------------------------------");
 
-            stringBuilder.append("Prefix:"+ c.prefix+"\n");
+            stringBuilder.append("\nPrefix:"+ c.prefix+"\n");
             stringBuilder.append("Postfix:"+ c.postfix+"\n");
             stringBuilder.append("PrefAndPos:"+ c.prefAndPos+"\n");
             stringBuilder.append("Buying:"+c.postfix+" -------> Also Buying:"+c.prefix+" with Confidence:"+
                     c.confidenceValue+"\n");
             stringBuilder.append("\nPrefix TimeFrame:"+c.prefTimeFrame+"\n");
             stringBuilder.append("Postfix TimeFrame:"+c.posTimeFrame+"\n");
-            stringBuilder.append("Minimum TimeDiffrerence is:"+abs(days)+" days!\n");
+            stringBuilder.append("Minimum Time Diffrerence is:"+c.minTimeDifference+" days!\n");
 
             stringBuilder.append("------------------------------------------------\n");
 
@@ -392,6 +428,7 @@ public class Main {
             }
 
 
+            /*
             for(String time : ub.usersTimeStamp){
                 Map<String,List<String>> timeToItems = new HashMap<>();
                 List<String> items = new ArrayList<>();
@@ -409,6 +446,7 @@ public class Main {
                 ub.timeStampToAllItems.add(timeToItems);
 
             }
+            */
 
 
 
@@ -1046,7 +1084,30 @@ public class Main {
 
     }
 
+    public static void saveMinTimeDifference() {
+        for (Confidence c : confidenceObjects) {
+            LocalDateTime minPos = getMinDateTime(c.posTimeFrame);
+            LocalDateTime minPref = getMinDateTime(c.prefTimeFrame);
+            c.minTimeDifference = abs(ChronoUnit.DAYS.between(minPref, minPos));
+        }
 
+    }
+
+    public static void pruneTimeDiff(List<Confidence> sequences){
+        List<Confidence> toDelete = new ArrayList<>();
+        for(Confidence x : sequences){
+
+            if(x.minTimeDifference > minTimeDiff){
+                toDelete.add(x);
+
+            }
+        }
+        for(Confidence y : toDelete){
+            //System.out.println("Element Deleted is: "+ y.itemsJoined);
+            sequences.remove(y);
+        }
+
+    }
 
 
 }

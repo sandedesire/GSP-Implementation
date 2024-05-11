@@ -11,7 +11,7 @@ public class Confidence {
     public List<String> prefTimeFrame = new ArrayList<>();
     public List<String> posTimeFrame = new ArrayList<>();
     public List<String> timeDifferences = new ArrayList<>();
-    public String minTimeDifference;
+    public long minTimeDifference;
 
 
 
@@ -84,11 +84,11 @@ public class Confidence {
         this.timeDifferences = timeDifferences;
     }
 
-    public String getMinTimeDifference() {
+    public long getMinTimeDifference() {
         return minTimeDifference;
     }
 
-    public void setMinTimeDifference(String minTimeDifference) {
+    public void setMinTimeDifference(long minTimeDifference) {
         this.minTimeDifference = minTimeDifference;
     }
 }
