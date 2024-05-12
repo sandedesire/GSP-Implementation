@@ -1,5 +1,8 @@
+package GSPImplementation;
+
 import java.util.ArrayList;
 import java.util.List;
+import GSPImplementation.UserBasket;
 
 public class Confidence {
     public List<String> prefix = new ArrayList<>();
@@ -52,7 +55,7 @@ public class Confidence {
         this.confidenceValue = confidenceValue;
     }
 
-    public List<UserBasket> getPrefAndPosUsers() {
+    public List<GSPImplementation.UserBasket> getPrefAndPosUsers() {
         return prefAndPosUsers;
     }
 
