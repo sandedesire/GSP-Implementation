@@ -9,6 +9,6 @@ module GSPImplementation {
     requires jdk.jsobject;
 
 
-    opens GSPImplementation to javafx.base,javafx.graphics;
+    opens GSPImplementation to javafx.base,javafx.graphics,javafx.controls;
 
 }

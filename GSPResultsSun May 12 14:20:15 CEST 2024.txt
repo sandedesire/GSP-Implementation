@@ -3,7 +3,7 @@ EFFICIENT GSP IMPLEMENTATION ON LARGE DATASET BY KOM SAMUEL @LUXEMBOURG UNIVERSI
 -----------------------------------------------------------------------------------
 Header is: [Transaction ID, Items, TimeStamp]
 -----------------------------------
-Minimum Confidence:0.6
+Minimum Confidence:0.7
 -----------------------------------
 Minimum Support:0.3
 -----------------------------------
@@ -42,7 +42,7 @@ Creating the Confidence Objects...
 Combining Prefix and Postfix in a set
 ------------------------------------------------
 Calculating Confidence
-There are:18 rules generated.
+There are:16 rules generated.
 [[B], [E], [F], [B, E], [B, F], [E, F], [B, E, F]]
 All users who bought PrefAndPos:60,50,40,
 Prefix:[B]
@@ -52,16 +52,6 @@ Buying:[E] -------> Also Buying:[B] with Confidence:0.75
 
 Prefix TimeFrame:[01-12-2010 08:26, 01-12-2010 08:26, 01-12-2010 08:26]
 Postfix TimeFrame:[01-12-2010 08:26, 01-12-2014 08:26, 01-12-2013 08:26]
-Minimum Time Diffrerence is:0 days!
-------------------------------------------------
-All users who bought PrefAndPos:60,50,40,
-Prefix:[B]
-Postfix:[F]
-PrefAndPos:[B, F]
-Buying:[F] -------> Also Buying:[B] with Confidence:0.6
-
-Prefix TimeFrame:[01-12-2010 08:26, 01-12-2010 08:26, 01-12-2010 08:26]
-Postfix TimeFrame:[01-12-2010 08:26, 01-12-2010 08:26, 01-12-2010 08:26]
 Minimum Time Diffrerence is:0 days!
 ------------------------------------------------
 All users who bought PrefAndPos:60,50,40,
@@ -122,16 +112,6 @@ Buying:[B, E] -------> Also Buying:[F] with Confidence:1.0
 
 Prefix TimeFrame:[01-12-2010 08:26, 01-12-2010 08:26, 01-12-2010 08:26]
 Postfix TimeFrame:[01-12-2010 08:26, 01-12-2010 08:26, 01-12-2010 08:26, 01-12-2010 08:26, 01-12-2014 08:26, 01-12-2013 08:26]
-Minimum Time Diffrerence is:0 days!
-------------------------------------------------
-All users who bought PrefAndPos:60,50,40,
-Prefix:[B, E]
-Postfix:[F]
-PrefAndPos:[B, E, F]
-Buying:[F] -------> Also Buying:[B, E] with Confidence:0.6
-
-Prefix TimeFrame:[01-12-2010 08:26, 01-12-2010 08:26, 01-12-2010 08:26, 01-12-2010 08:26, 01-12-2014 08:26, 01-12-2013 08:26]
-Postfix TimeFrame:[01-12-2010 08:26, 01-12-2010 08:26, 01-12-2010 08:26]
 Minimum Time Diffrerence is:0 days!
 ------------------------------------------------
 All users who bought PrefAndPos:60,50,40,
@@ -215,6 +195,6 @@ Postfix TimeFrame:[01-12-2010 08:26, 01-12-2010 08:26, 01-12-2010 08:26, 01-12-2
 Minimum Time Diffrerence is:0 days!
 ------------------------------------------------
 Running Time Statistics
-Start:Sun May 12 13:44:12 CEST 2024
-End:Sun May 12 13:44:12 CEST 2024
-It took:96 Milliseconds
+Start:Sun May 12 14:20:15 CEST 2024
+End:Sun May 12 14:20:15 CEST 2024
+It took:87 Milliseconds
