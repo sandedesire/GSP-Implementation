@@ -1,3 +1,7 @@
 Manifest-Version: 1.0
-Main-Class: GSPImplementation.Main
+Main-Class: GSPImplementation.Launcher
+Class-Path: javafx-swt.jar javafx.web.jar javafx.base.jar javafx.fxml.ja
+ r javafx.media.jar javafx.swing.jar javafx.controls.jar javafx.graphics
+ .jar javafx-swt.jar javafx.web.jar javafx.base.jar javafx.fxml.jar java
+ fx.media.jar javafx.swing.jar javafx.controls.jar javafx.graphics.jar
 
