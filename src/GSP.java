@@ -13,17 +13,16 @@ import GSPImplementation.UserBasket;
 import GSPImplementation.UserData;
 import GSPImplementation.Confidence;
 import GSPImplementation.SubSequence;
-
-
-
-
-
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 
 public class GSP {
 
-    public  File resultFile;
+    public  static File resultFile;
     public  File resourceFile;
+
+    public static StringProperty userInfo = new SimpleStringProperty();
 
 
     public  String pathToResult;
@@ -147,6 +146,7 @@ public class GSP {
         }
 
          */
+        informeUser();
 
         //Running Parameters
         System.out.println("-----------------------------------");
@@ -174,6 +174,8 @@ public class GSP {
         stringBuilder.append("greater than "+minTimeDiff+" days will be deleted\n");
         stringBuilder.append("-----------------------------------\n");
 
+        informeUser();
+
 
 
 
@@ -185,6 +187,7 @@ public class GSP {
         System.out.println("Number of rows After data cleaning:"+database.size());
         stringBuilder.append("Number of rows After data cleaning:"+database.size()+"\n");
 
+        informeUser();
 
 
 
@@ -210,8 +213,11 @@ public class GSP {
         System.out.println("VERIFICATION AFTER UNIQUENESS ITEMS AND TIMESTAMP");
         System.out.println(userBasketDatabase.get(2).getAllItemsEverBought());
         System.out.println(userBasketDatabase.get(2).getUsersTimeStamp());
+        informeUser();
 
         setAllUsersMap(database,userBasketDatabase);
+
+        informeUser();
 
 
 
@@ -241,6 +247,7 @@ public class GSP {
 
 
 
+        informeUser();
 
         //Joining and Pruning Phase
         //Making the subsequences
@@ -270,6 +277,7 @@ public class GSP {
 
 
 
+        informeUser();
         System.out.println("------------------GSP----------------------------------------");
 
         round1(logs.getLast());
@@ -277,6 +285,8 @@ public class GSP {
         round3(logs.getLast());
         round4(logs.getLast());
         round5(logs.getLast());
+
+        informeUser();
 
         getWinnerSubSequenceForm(logs);
         //Will Finish it's implementation in future versions
@@ -287,6 +297,7 @@ public class GSP {
         calculateConfidence(winners);
         System.out.println(confidenceCombinations);
         stringBuilder.append(confidenceCombinations+"\n");
+        informeUser();
 
         //DETERMINING THE MINIMUM TIMEDIFFERENCE AMONG THE RULES
         isolateRespetiveUsers();
@@ -301,6 +312,8 @@ public class GSP {
 
         saveMinTimeDifference();
         pruneTimeDiff(confidenceObjects);
+
+        informeUser();
 
         //Printing the Confidence Objects
         for(Confidence c : confidenceObjects){
@@ -368,8 +381,11 @@ public class GSP {
         long time_difference = end.getTime() - start.getTime();
         System.out.println("It took:"+time_difference+" Milliseconds");
         stringBuilder.append("It took:"+time_difference+" Milliseconds\n");
+        informeUser();
 
         saveResultsToFile(stringBuilder);
+
+        informeUser();
 
 
     }
@@ -1090,7 +1106,7 @@ public class GSP {
         for (Confidence c : confidenceObjects) {
             LocalDateTime minPos = getMinDateTime(c.posTimeFrame);
             LocalDateTime minPref = getMinDateTime(c.prefTimeFrame);
-            c.minTimeDifference = abs(ChronoUnit.DAYS.between(minPref, minPos));
+            c.minTimeDifference = ChronoUnit.DAYS.between(minPref, minPos);
         }
 
     }
@@ -1099,7 +1115,7 @@ public class GSP {
         List<Confidence> toDelete = new ArrayList<>();
         for(Confidence x : sequences){
 
-            if(x.minTimeDifference > minTimeDiff){
+            if(x.minTimeDifference > minTimeDiff || x.minTimeDifference < 0){
                 toDelete.add(x);
 
             }
@@ -1108,6 +1124,11 @@ public class GSP {
             //System.out.println("Element Deleted is: "+ y.itemsJoined);
             sequences.remove(y);
         }
+
+    }
+
+    public void informeUser(){
+        userInfo.set(stringBuilder.toString());
 
     }
 

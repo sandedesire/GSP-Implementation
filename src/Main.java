@@ -1,9 +1,13 @@
 package GSPImplementation;
 
 import javafx.application.Application;
+import javafx.beans.binding.StringExpression;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.*;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -28,13 +32,15 @@ import GSPImplementation.GSP;
 public class Main extends Application {
     Label running = new Label();
     Label finished = new Label();
+    TextArea result = new TextArea();
     FileChooser fileChooser = new FileChooser();
     File resourceFile;
     TextField minSupFld = new TextField();
     TextField minConfTfld = new TextField();
     TextField minTimDiffTfld = new TextField();
-    ComboBox<String> minTimDiff = new ComboBox<>();
+    Label minTimDiff = new Label("Days");
     List<String> comboIndexes;
+    TextArea textArea = new TextArea();
     int idIndex;
     int descIndex;
     int timeStampIndex;
@@ -86,9 +92,11 @@ public class Main extends Application {
         toolBar.getItems().add(new Separator());
 
         Button importTXT = new Button("Import .TXT");
-        toolBar.getItems().add(importTXT);
 
-        toolBar.getItems().add(new Separator());
+        //FUTURE IMPLEMENTATION FOR TEXT MINING
+        //toolBar.getItems().add(importTXT);
+
+        //toolBar.getItems().add(new Separator());
 
         Button saveToFile = new Button("Save Results");
         toolBar.getItems().add(saveToFile);
@@ -133,9 +141,7 @@ public class Main extends Application {
         minTimDiffTfld.setPrefWidth(40);
         minTimDiff.setPrefWidth(80);
 
-        ObservableList<String> minTimeitems = FXCollections.
-                observableArrayList("Days","Weeks","Years");
-        minTimDiff.setItems(minTimeitems);
+
 
         HBox timDifHBox = new HBox(10);
         timDifHBox.getChildren().addAll(minTimDiffLabel,minTimDiffTfld,minTimDiff);
@@ -157,15 +163,18 @@ public class Main extends Application {
         //rightElements.getChildren().addAll(suppConfHBox,comboBoxesHBox);
         right.setSpacing(10);
         right.getChildren().addAll(suppConfHBox,comboBoxesVBox,
-                advancedControlText,timDifHBox,buttons);
+                advancedControlText,timDifHBox,buttons,result);
         //*** END  OF ELEMENTS OF RIGHT****
 
         //*** START  OF ELEMENTS OF LEFT****
         VBox left  = new VBox();
-        Button test = new Button("Testing");
-        left.setPrefWidth(400);
 
-        left.getChildren().addAll(test);
+        left.setPrefWidth(400);
+        textArea.setWrapText(true);
+        textArea.setPrefHeight(800);
+        textArea.setPadding(new Insets(5));
+
+        left.getChildren().addAll(textArea);
         //*** END  OF ELEMENTS OF LEFT****
 
 
@@ -179,13 +188,15 @@ public class Main extends Application {
 
         Scene scene = new Scene(root,700,480);
         stage.setScene(scene);
-        stage.setTitle("GSP Retail Mining by KOM Samuel");
+        stage.setTitle("GSP Retail Mining");
         stage.show();
 
 
 
         importCSV.setOnAction(e -> handleImportCSV(e,stage));
         startBtn.setOnAction(e -> handleStartBtn(e,stage));
+        saveToFile.setOnAction(e -> handleSaveResult(e,stage));
+        saveBtn.setOnAction(e -> handleSaveResult(e,stage));
 
 
 
@@ -216,6 +227,7 @@ public class Main extends Application {
             String customerIDStr;
             String invoiceDateStr;
             int minTimeDiffValue;
+
 
             //Getting all the parameter values
             try {
@@ -259,6 +271,11 @@ public class Main extends Application {
                         minConfValue,minTimeDiffValue
                 );
 
+                StringProperty info = new SimpleStringProperty();
+                info.bind(GSP.userInfo);
+
+                textArea.setText(info.get());
+
             }
 
 
@@ -277,7 +294,7 @@ public class Main extends Application {
 
 
 
-    private void handleImportCSV(javafx.event.ActionEvent e,Stage stage) {
+    public void handleImportCSV(javafx.event.ActionEvent e,Stage stage) {
         fileChooser.setTitle("Open CSV File");
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("CSV", "*.csv"),
@@ -318,6 +335,13 @@ public class Main extends Application {
 
 
     }
+
+    public void handleSaveResult(ActionEvent e, Stage stage){
+        result.setWrapText(true);
+        result.setText(GSP.resultFile.getAbsolutePath().toString());
+    }
+
+
 
     public void showErrorDialog(){
         Stage stage = new Stage();
