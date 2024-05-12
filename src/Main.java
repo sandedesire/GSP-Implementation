@@ -339,6 +339,7 @@ public class Main extends Application {
     public void handleSaveResult(ActionEvent e, Stage stage){
         result.setWrapText(true);
         result.setText(GSP.resultFile.getAbsolutePath().toString());
+
     }
 
 
