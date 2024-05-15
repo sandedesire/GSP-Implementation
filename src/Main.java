@@ -266,15 +266,16 @@ public class Main extends Application {
                 showErrorDialog3();
 
             }else {
+                StringProperty info = new SimpleStringProperty();
+                info.bind(GSP.userInfo);
+
+                textArea.setText(info.get());
                 GSP gsp = new GSP(
                         resourceFile,idIndex,descIndex,timeStampIndex,minSupValue,
                         minConfValue,minTimeDiffValue
                 );
 
-                StringProperty info = new SimpleStringProperty();
-                info.bind(GSP.userInfo);
 
-                textArea.setText(info.get());
 
             }
 
