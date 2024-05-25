@@ -16,13 +16,11 @@ import GSPImplementation.Confidence;
 import GSPImplementation.SubSequence;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.scene.control.TextArea;
 
 
 public class GSP {
 
     public  static File resultFile;
-    public  File resourceFile;
 
     public static StringProperty userInfo = new SimpleStringProperty();
 
