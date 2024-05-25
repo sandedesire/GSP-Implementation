@@ -8,6 +8,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import static GSPImplementation.Main.info;
 import static java.lang.Math.abs;
 import GSPImplementation.UserBasket;
 import GSPImplementation.UserData;
@@ -15,6 +16,7 @@ import GSPImplementation.Confidence;
 import GSPImplementation.SubSequence;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.TextArea;
 
 
 public class GSP {
@@ -26,7 +28,7 @@ public class GSP {
 
 
     public  String pathToResult;
-    public  StringBuilder stringBuilder = new StringBuilder();
+    public  static StringBuilder stringBuilder = new StringBuilder();
     public  DateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm");
 
     public   int UserIDColumn ;
@@ -1127,8 +1129,9 @@ public class GSP {
 
     }
 
-    public void informeUser(){
+    public static void informeUser(){
         userInfo.set(stringBuilder.toString());
+        //textArea.setText(info.get().toString());
 
     }
 

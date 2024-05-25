@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.beans.binding.StringExpression;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.*;
@@ -18,6 +19,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,6 +33,8 @@ import GSPImplementation.GSP;
 
 
 public class Main extends Application {
+    public static StringProperty info = new SimpleStringProperty();
+
     Label running = new Label();
     Label finished = new Label();
     TextArea result = new TextArea();
@@ -40,10 +45,14 @@ public class Main extends Application {
     TextField minTimDiffTfld = new TextField();
     Label minTimDiff = new Label("Days");
     List<String> comboIndexes;
-    TextArea textArea = new TextArea();
+    public    TextArea textArea = new TextArea();
     int idIndex;
     int descIndex;
     int timeStampIndex;
+
+    ObservableList<String> listForContent = FXCollections.observableArrayList();
+
+
 
 
 
@@ -71,6 +80,8 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage){
+        //info.addListener(Main::onChanged);
+
         //Setting all the controls disabled
          minSupFld.setDisable(true);
          minTimDiffTfld.setDisable(true);
@@ -115,7 +126,9 @@ public class Main extends Application {
 
         //*** START OF ELEMENTS OF RIGHT****
         VBox right  = new VBox();
-        right.setPrefWidth(300);
+        right.setPrefWidth(700);
+        right.setPrefHeight(1300);
+        right.setPadding(new Insets(10));
         Group rightElements = new Group();
         Label minSupLabel = new Label("Min. Support");
         Label minConfLabel = new Label("Min. Confidence");
@@ -169,9 +182,10 @@ public class Main extends Application {
         //*** START  OF ELEMENTS OF LEFT****
         VBox left  = new VBox();
 
-        left.setPrefWidth(400);
+        left.setPrefWidth(1000);
         textArea.setWrapText(true);
-        textArea.setPrefHeight(800);
+        textArea.setWrapText(true);
+        textArea.setPrefHeight(1300);
         textArea.setPadding(new Insets(5));
 
         left.getChildren().addAll(textArea);
@@ -186,7 +200,7 @@ public class Main extends Application {
         root.setLeft(left);
 
 
-        Scene scene = new Scene(root,700,480);
+        Scene scene = new Scene(root,1400,1200);
         stage.setScene(scene);
         stage.setTitle("GSP Retail Mining");
         stage.show();
@@ -266,14 +280,17 @@ public class Main extends Application {
                 showErrorDialog3();
 
             }else {
-                StringProperty info = new SimpleStringProperty();
+
+
                 info.bind(GSP.userInfo);
 
-                textArea.setText(info.get());
                 GSP gsp = new GSP(
                         resourceFile,idIndex,descIndex,timeStampIndex,minSupValue,
                         minConfValue,minTimeDiffValue
                 );
+                textArea.setText(info.get());
+
+
 
 
 
@@ -378,6 +395,21 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.setTitle("Error");
         stage.show();
+
+    }
+
+    public   void onChanged(ObservableValue<? extends String> change,
+                                 String old, String newV){
+    inform();
+
+
+
+
+    }
+
+    public  void inform(){
+        textArea.setText(info.get());
+
 
     }
 
