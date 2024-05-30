@@ -1,0 +1,61 @@
+EFFICIENT GSP IMPLEMENTATION ON LARGE DATASET BY KOM SAMUEL @LUXEMBOURG UNIVERSITY
+
+-----------------------------------------------------------------------------------
+Header is: [Transaction ID, Items, TimeStamp]
+-----------------------------------
+Minimum Confidence:0.5
+-----------------------------------
+Minimum Support:0.5
+-----------------------------------
+Minimum Time Difference:30
+That is, every rule generated with a time diffrerence greater than 30 days will be deleted
+-----------------------------------
+Number of rows Before data cleaning:25
+This amount of rows user Data was deleted:0
+Number of rows After data cleaning:25
+-----------------------------------
+-----------------------------------
+SIZE OF USER BASKET LIST:8
+-----------------------------------
+Now Running the GSP Algorithm...Might take some time!
+-----------------------------------
+Checking all users item to timestamp and timestamp to item
+General Statistics After Round 1
+Sub Sequence of form:[A] has Support: 0.5
+Sub Sequence of form:[B] has Support: 0.5
+Sub Sequence of form:[C] has Support: 0.5
+Sub Sequence of form:[E] has Support: 0.5
+Sub Sequence of form:[F] has Support: 0.625
+----------------------------------------------------------
+General Statistics After Round 2
+Sub Sequence of form:[E, F] has Support: 0.5
+----------------------------------------------------------
+General Statistics After Round 3
+----------------------------------------------------------
+General Statistics After Round 4
+----------------------------------------------------------
+General Statistics After Round 5
+----------------------------------------------------------
+The Winning Subsequence(s) is/are of Form:
+Sequence of Form: [E, F] has support: 0.5
+We are Calculating Confidence using the items:[E, F]
+Creating the Confidence Objects...
+Combining Prefix and Postfix in a set
+------------------------------------------------
+Calculating Confidence
+There are:2 rules generated.
+[[E], [F], [E, F]]
+
+Prefix:[E]
+Postfix:[F]
+PrefAndPos:[E, F]
+Buying:[F] -------> Also Buying:[E] with Confidence:0.8
+
+Prefix TimeFrame:[01-2-2010 08:26, 01-12-2013 08:26, 01-12-2014 08:26, 01-12-2010 08:26]
+Postfix TimeFrame:[01-3-2010 08:26, 01-12-2012 08:26, 01-12-2010 08:26]
+Minimum Time Diffrerence is:28 days!
+------------------------------------------------
+Running Time Statistics
+Start:Thu May 30 20:52:35 CEST 2024
+End:Thu May 30 20:52:57 CEST 2024
+It took:22598 Milliseconds

@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Period;
 import java.util.*;
 
 
@@ -41,6 +42,8 @@ import java.util.*;
 
 import static GSPImplementation.Main.info;
 import static java.lang.Math.abs;
+import static java.time.temporal.ChronoUnit.MINUTES;
+
 import GSPImplementation.UserBasket;
 import GSPImplementation.UserData;
 import GSPImplementation.Confidence;
@@ -682,23 +685,16 @@ public class Main extends Application {
         //DETERMINING THE MINIMUM TIMEDIFFERENCE AMONG THE RULES
         isolateRespetiveUsers();
 
+
+        setTimeFrames(confidenceObjects);
         saveMinTimeDifference();
         pruneTimeDiff(confidenceObjects);
-
+        pruneEmptyPrefOrPosTimeFrame(confidenceObjects);
         informeUser();
+
 
         //Printing the Confidence Objects
         for(Confidence c : confidenceObjects){
-            List<String> prefixTimes = new ArrayList<>();
-            List<String> postfixTimes = new ArrayList<>();
-            prefixTimes = returnCommonTimestamp(c.prefix);
-            postfixTimes = returnCommonTimestamp(c.postfix);
-            c.prefTimeFrame = prefixTimes;
-            c.posTimeFrame = postfixTimes;
-
-
-
-
 
             System.out.println("Prefix:"+ c.prefix);
             System.out.println("Postfix:"+ c.postfix);
@@ -709,6 +705,7 @@ public class Main extends Application {
 
 
 
+            /*
             System.out.print("All users who bought PrefAndPos:");
             stringBuilder.append("All users who bought PrefAndPos:");
             for(UserBasket ub : c.prefAndPosUsers){
@@ -718,7 +715,10 @@ public class Main extends Application {
             }
             System.out.println("\nPrefix TimeFrame:"+c.prefTimeFrame);
             System.out.println("Postfix TimeFrame:"+c.posTimeFrame);
-            System.out.println("Minimum Time Diffrerence is:"+c.minTimeDifference+" days!");
+
+             */
+            System.out.println("Minimum Time Diffrerence is:"
+                    +c.minTimeDifference+" days!" );
 
 
 
@@ -731,7 +731,8 @@ public class Main extends Application {
                     c.confidenceValue+"\n");
             stringBuilder.append("\nPrefix TimeFrame:"+c.prefTimeFrame+"\n");
             stringBuilder.append("Postfix TimeFrame:"+c.posTimeFrame+"\n");
-            stringBuilder.append("Minimum Time Diffrerence is:"+c.minTimeDifference+" days!\n");
+            stringBuilder.append("Minimum Time Diffrerence is:"+
+                    c.minTimeDifference+" days!\n");
 
             stringBuilder.append("------------------------------------------------\n");
 
@@ -1341,13 +1342,7 @@ public class Main extends Application {
             try {
                 Date date = df.parse(user.getTimeStamp());
 
-                /*
-                System.out.println(date);
-                LocalDateTime local_date_time =
-                        date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-                System.out.println(local_date_time);
 
-                 */
 
 
             }
@@ -1467,6 +1462,14 @@ public class Main extends Application {
             LocalDateTime minPos = getMinDateTime(c.posTimeFrame);
             LocalDateTime minPref = getMinDateTime(c.prefTimeFrame);
             c.minTimeDifference = ChronoUnit.DAYS.between(minPref, minPos);
+
+
+
+
+
+
+
+
         }
 
     }
@@ -1475,7 +1478,8 @@ public class Main extends Application {
         List<Confidence> toDelete = new ArrayList<>();
         for(Confidence x : sequences){
 
-            if(x.minTimeDifference > minTimeDiff || x.minTimeDifference < 0){
+            if(x.minTimeDifference > minTimeDiff || x.minTimeDifference < 0
+             ){
                 toDelete.add(x);
 
             }
@@ -1483,6 +1487,39 @@ public class Main extends Application {
         for(Confidence y : toDelete){
             //System.out.println("Element Deleted is: "+ y.itemsJoined);
             sequences.remove(y);
+        }
+
+    }
+
+    public  void pruneEmptyPrefOrPosTimeFrame(List<Confidence> sequences){
+        List<Confidence> toDelete = new ArrayList<>();
+
+        for(Confidence x : sequences){
+
+            if(x.prefTimeFrame.isEmpty() || x.posTimeFrame.isEmpty()){
+                toDelete.add(x);
+
+            }
+        }
+
+        for(Confidence y : toDelete){
+            //System.out.println("Element Deleted is: "+ y.itemsJoined);
+            sequences.remove(y);
+        }
+
+
+
+    }
+
+    public  void setTimeFrames(List<Confidence> sequences){
+        for(Confidence c : sequences){
+            List<String> prefixTimes = new ArrayList<>();
+            List<String> postfixTimes = new ArrayList<>();
+            prefixTimes = returnCommonTimestamp(c.prefix);
+            postfixTimes = returnCommonTimestamp(c.postfix);
+            c.prefTimeFrame = prefixTimes;
+            c.posTimeFrame = postfixTimes;
+
         }
 
     }
