@@ -79,6 +79,8 @@ public class Main extends Application {
     public   float minConf;
     public   int minTimeDiff;
 
+    public   List<Map<String,List<String>>>  winnersToTimeStamp = new ArrayList<>();
+
     public   List<List<String>> winners = new ArrayList<>();
     public   Set<String> confidence = new HashSet<>();
     public   List<List<String>> confidenceCombinations = new ArrayList<>();
@@ -502,31 +504,6 @@ public class Main extends Application {
         createResultFile();
 
 
-        //Parsing the CSV file to get data
-        //File resourceFile = new File("/home/maitre/Documents/GSPTestData.csv");
-        //File resourceFile = new File("/home/maitre/Downloads/archive/OnlineRetail.csv");
-
-
-
-
-
-
-
-
-
-        /*
-        File resourceFile = new File("/home/maitre/Downloads/" +
-                "ClassicAssociationDiscoveryGroundTruthData.csv");
-
-         */
-
-
-
-
-
-
-
-
         System.out.println("GSP Implementation");
 
         String line = "";
@@ -552,16 +529,6 @@ public class Main extends Application {
                         entry[TimeStampColumn]);
 
 
-
-
-
-
-
-
-
-                // UserIDColumn = 6, ItemColumn = 2, TimeStampColumn = 4
-                //UserData userData = new UserData(entry[6],entry[2],entry[4]);
-
                 database.add(userData);
             }
         }
@@ -570,16 +537,7 @@ public class Main extends Application {
             ex.printStackTrace();
         }
 
-        //Testing our Database
 
-        /*
-        for (UserData x : database){
-            System.out.println(x.getUserID());
-            System.out.println(x.getItemDescription());
-            System.out.println(x.getTimeStamp());
-        }
-
-         */
         informeUser();
 
         //Running Parameters
@@ -614,7 +572,7 @@ public class Main extends Application {
 
 
 
-        //Data Cleaning. TO BE IMPLEMENTED
+        //Data Cleaning
         System.out.println("Number of rows Before data cleaning:"+database.size());
         stringBuilder.append("Number of rows Before data cleaning:"+database.size()+"\n");
         dataCleaning(database);
@@ -629,9 +587,7 @@ public class Main extends Application {
 
         //Collecting UniqueIDs and UniqueItems
         setUniqueIDsAndItemsAndTimestamp(database);
-        //System.out.println("ALL UNIQUE IDS AND ITEMS");
-        //System.out.println(uniqueIDs);
-        //System.out.println(uniqueITems);
+
 
         //Creating our List of UserBasket making use of UniqueIds
         for(String x : uniqueIDs){
@@ -677,10 +633,6 @@ public class Main extends Application {
             System.out.println(x.getTimeStampToAllItems());
             System.out.println("----------------------------------------------------------");
 
-            //stringBuilder.append("User with ID:" + x.getUserID()+"\n");
-            //stringBuilder.append(x.getItemToAllTimeStamp()+"\n");
-            //stringBuilder.append(x.getTimeStampToAllItems()+"\n");
-            //stringBuilder.append("----------------------------------------------------------\n");
 
 
         }
@@ -705,23 +657,6 @@ public class Main extends Application {
         }
         logs.add(sequences);
 
-        //Printing our initial List of Sequneces
-        /*
-        System.out.println("Printing our initial List of Sequences");
-        stringBuilder.append("Printing our initial List of Sequences\n");
-        for(SubSequence x : logs.getLast()){
-            System.out.println(x.itemsJoined+" has Support"+x.support);
-            System.out.println("-------------------------------------");
-
-            stringBuilder.append(x.itemsJoined+" has Support"+x.support +"\n");
-            stringBuilder.append("-------------------------------------\n");
-        }
-
-         */
-
-
-
-
 
         informeUser();
         System.out.println("------------------GSP----------------------------------------");
@@ -735,26 +670,17 @@ public class Main extends Application {
         informeUser();
 
         getWinnerSubSequenceForm(logs);
-        //Will Finish it's implementation in future versions
-        //processWinnerSubsequences(winners);
 
         //Calculate Confidence
-
         calculateConfidence(winners);
+        //Get timeframes for all winners from confidence list
+        getAllWinnersTimeframe();
         System.out.println(confidenceCombinations);
         stringBuilder.append(confidenceCombinations+"\n");
         informeUser();
 
         //DETERMINING THE MINIMUM TIMEDIFFERENCE AMONG THE RULES
         isolateRespetiveUsers();
-        getPrefixTimeStamp();
-        getPostfixTimeStamp();
-
-
-
-
-
-
 
         saveMinTimeDifference();
         pruneTimeDiff(confidenceObjects);
@@ -763,6 +689,16 @@ public class Main extends Application {
 
         //Printing the Confidence Objects
         for(Confidence c : confidenceObjects){
+            List<String> prefixTimes = new ArrayList<>();
+            List<String> postfixTimes = new ArrayList<>();
+            prefixTimes = returnCommonTimestamp(c.prefix);
+            postfixTimes = returnCommonTimestamp(c.postfix);
+            c.prefTimeFrame = prefixTimes;
+            c.posTimeFrame = postfixTimes;
+
+
+
+
 
             System.out.println("Prefix:"+ c.prefix);
             System.out.println("Postfix:"+ c.postfix);
@@ -805,15 +741,6 @@ public class Main extends Application {
 
 
 
-
-
-
-
-
-
-
-
-
         System.out.println("Running Time Statistics");
         stringBuilder.append("Running Time Statistics\n");
 
@@ -835,6 +762,8 @@ public class Main extends Application {
 
 
     }
+
+
 
 
     public  void createResultFile(){
@@ -872,7 +801,7 @@ public class Main extends Application {
         for(UserData x : database){
             uniqueIDs.add(x.getUserID());
             uniqueITems.add(x.getItemDescription());
-            uniqueTimestamp.add(x.getTimeStamp());
+            //uniqueTimestamp.add(x.getTimeStamp());
         }
     }
 
@@ -900,11 +829,9 @@ public class Main extends Application {
 
 
             for(String item : ub.allItemsEverBought){
-                //System.out.println("User's current item is:"+ item);
                 Map<String,List<String>> itemToTimes = new HashMap<>();
                 List<String> times = new ArrayList<>();
-                //String currentItem = null;
-                //currentItem = item;
+
                 for(UserData ud : database){
                     if(ud.getItemDescription().equals(item) && ub.getUserID().equals(ud.getUserID())){
                         times.add(ud.getTimeStamp());
@@ -919,25 +846,6 @@ public class Main extends Application {
             }
 
 
-            /*
-            for(String time : ub.usersTimeStamp){
-                Map<String,List<String>> timeToItems = new HashMap<>();
-                List<String> items = new ArrayList<>();
-                //String currentItem = null;
-                //currentItem = item;
-                for(UserData ud : database){
-                    if(ud.getTimeStamp().equals(time) && ub.getUserID().equals(ud.getUserID())){
-                        items.add(ud.getItemDescription());
-
-                    }
-
-
-                }
-                timeToItems.put(time,items);
-                ub.timeStampToAllItems.add(timeToItems);
-
-            }
-            */
 
 
 
@@ -1204,12 +1112,12 @@ public class Main extends Application {
                 return;
             }
             if(!(l.get(i).isEmpty())){
-                System.out.println("The Winning Subsequence(s) is/are:");
-                stringBuilder.append("The Winning Subsequence(s) is/are:\n");
+                System.out.println("The Winning Subsequence(s) is/are of Form:");
+                stringBuilder.append("The Winning Subsequence(s) is/are of Form:\n");
                 for(SubSequence s : l.get(i)){
-                    System.out.println("Sequence: "+ s.itemsJoined+
+                    System.out.println("Sequence of Form: "+ s.itemsJoined+
                             " has support: "+s.support);
-                    stringBuilder.append("Sequence: "+ s.itemsJoined+
+                    stringBuilder.append("Sequence of Form: "+ s.itemsJoined+
                             " has support: "+s.support+"\n");
                     winners.add(s.itemsJoined);
                 }
@@ -1473,47 +1381,53 @@ public class Main extends Application {
         }
     }
 
-    public  void getPrefixTimeStamp(){
-        for(Confidence c : confidenceObjects){
-            for(String s : c.prefix){
-                for(UserBasket ub : c.prefAndPosUsers){
-                    for (Map<String, List<String>> map : ub.itemToAllTimeStamp) {
-                        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
-                            String key = entry.getKey();
-                            List<String> value = entry.getValue();
 
-                            if(key.equals(s)){
-                                c.prefTimeFrame.addAll(value);
-                            }
-                        }
-                    }
 
-                }
-            }
+    public  List<String> returnCommonTimestamp(List<String> elements){
+        List<String> commonElements = new ArrayList<>
+                (returnListofTimeStamps(elements.getFirst()));
+        List<String> result = new ArrayList<>();
+
+        for(int i = 1 ; i < elements.size(); i++){
+            commonElements.retainAll(returnListofTimeStamps(elements.get(i)));
         }
+        result = commonElements.stream().distinct().toList();
+
+        return result;
+
+    }
+    public  List<String> returnListofTimeStamps(String x){
+        List<String> result = new ArrayList<>();
+        for (Map<String, List<String>> map : winnersToTimeStamp) {
+            for(Map.Entry<String, List<String>> entry : map.entrySet()){
+                if(entry.getKey().equals(x)){
+                    result = entry.getValue();
+                }
+
+            }
+
+        }
+        return result;
+
+
     }
 
-    public  void getPostfixTimeStamp(){
-        for(Confidence c : confidenceObjects){
-            for(String s : c.postfix){
-                for(UserBasket ub : c.prefAndPosUsers){
-                    for (Map<String, List<String>> map : ub.itemToAllTimeStamp) {
-                        for (Map.Entry<String, List<String>> entry : map.entrySet()) {
-                            String key = entry.getKey();
-                            List<String> value = entry.getValue();
-
-                            if(key.equals(s)){
-                                c.posTimeFrame.addAll(value);
-
-                            }
-                        }
-                    }
+    public void getAllWinnersTimeframe(){
+        //winnersToTimeStamp
+        for(String x : confidence){
+            List<String> sublist = new ArrayList<>();
+            for(UserData ud : database){
+                if(x.equals(ud.getItemDescription())){
+                    sublist.add(ud.getTimeStamp());
 
                 }
             }
+            Map<String,List<String>> submap = new HashMap<>();
+            submap.put(x,sublist);
+            winnersToTimeStamp.add(submap);
+            System.out.println("SubMap of:"+ submap);
+
         }
-
-
     }
 
     public  LocalDateTime getMinDateTime(List<String> dates){
