@@ -92,6 +92,9 @@ public class Main extends Application {
     public   Date start = new Date();
     public   Date end;
 
+    public   Date conversionStart;
+    public   Date conversionEnd;
+
 
 
 
@@ -132,6 +135,12 @@ public class Main extends Application {
     Button startBtn = new Button("Start");
     Button stopBtn = new Button("Stop");
     Button saveBtn = new Button("Save Result to File");
+
+    String errorMsg = "All Parameters not set\n" +
+            "Ensure Min. Support and Min Confidence are Real Numbers\n" +
+            "Real numbers in the range 0 and 1\n " +
+            "Also Min Sup should be >= 0.15 AND Min Conf should be >=0.3 \n" +
+            "For Optimum Performance";
 
 
     // Set the ComboBox to use the items list
@@ -309,7 +318,9 @@ public class Main extends Application {
                 description.getValue().trim().equals("") ||
                 invoiceDate.getValue().trim().equals("") ||
                 minTimDiffTfld.getText().trim().equals("") ){
-            showErrorDialog();
+            //showErrorDialog();
+            Platform.runLater(() -> textArea.setText(errorMsg));
+
         } else {
             //Creating an Array list ot serve as our DATABASE
             //ie it will hold ALL THE DATA ITEMS
@@ -336,7 +347,9 @@ public class Main extends Application {
                         minTimDiffTfld.getText().trim().toString());
 
             } catch (NumberFormatException numberError) {
-                showErrorDialog2();
+                //showErrorDialog2();
+                Platform.runLater(() -> textArea.setText(errorMsg));
+
                 return;
             }
 
@@ -359,7 +372,8 @@ public class Main extends Application {
 
             //CHECK THAT MIN SUP AND MIN CONF HAS A BASIC VALUE
             if(minSupValue < 0.15 || minConfValue < 0.3){
-                showErrorDialog3();
+                //showErrorDialog2();
+                Platform.runLater(() -> textArea.setText(errorMsg));
 
             }else {
                 running.setVisible(true);
@@ -454,41 +468,9 @@ public class Main extends Application {
 
 
 
-    public void showErrorDialog(){
-        Stage stage = new Stage();
-        VBox root = new VBox(new Text("All Parameters not set."),
-                new Text("Ensure Min. Support and Min Confidence are Real Numbers"),
-                new Text("Real numbers in the range 0 and 1"));
 
-        Scene scene = new Scene(root,700,700);
-        stage.setScene(scene);
-        stage.setTitle("Error");
-        stage.show();
 
-    }
 
-    public void showErrorDialog2(){
-        Stage stage = new Stage();
-        VBox root = new VBox(new Text("Not an appropriate real number entered for " +
-                "Min Suport or Min Confidence"));
-
-        Scene scene = new Scene(root,700,700);
-        stage.setScene(scene);
-        stage.setTitle("Error");
-        stage.show();
-
-    }
-
-    public void showErrorDialog3(){
-        Stage stage = new Stage();
-        VBox root = new VBox(new Text("Min Sup >= 0.15 AND Min Conf >=0.3 "));
-
-        Scene scene = new Scene(root,700,700);
-        stage.setScene(scene);
-        stage.setTitle("Error");
-        stage.show();
-
-    }
 
 
 
@@ -505,6 +487,7 @@ public class Main extends Application {
         this.minConf = minConf;
         this.minTimeDiff = minTimeDiff;
         createResultFile();
+
 
 
         System.out.println("GSP Implementation");
@@ -608,19 +591,27 @@ public class Main extends Application {
         stringBuilder.append("Now Running the GSP " +
                 "Algorithm...Might take some time!"+"\n");
         stringBuilder.append("-----------------------------------\n");
+        informeUser();
+
 
 
 
 
         //Setting all items each user ever bought and All Timestamp
+        //And calculating the time required to convert from
+        //transactional database to sequence database
+        conversionStart = new Date();
         setAllItemsEachUserEverboughtAndAllTimeStamp(database,
                 userBasketDatabase);
+        conversionEnd = new Date();
         System.out.println("VERIFICATION AFTER UNIQUENESS ITEMS AND TIMESTAMP");
         System.out.println(userBasketDatabase.get(2).getAllItemsEverBought());
         System.out.println(userBasketDatabase.get(2).getUsersTimeStamp());
         informeUser();
 
-        setAllUsersMap(database,userBasketDatabase);
+
+        //I don't think this function is needed again
+        //setAllUsersMap(database,userBasketDatabase);
 
         informeUser();
 
@@ -630,6 +621,7 @@ public class Main extends Application {
 
         System.out.println("Checking all users item to timestamp and timestamp to item");
         stringBuilder.append("Checking all users item to timestamp and timestamp to item\n");
+        /*
         for(UserBasket x : userBasketDatabase){
             System.out.println("User with ID:" + x.getUserID());
             System.out.println(x.getItemToAllTimeStamp());
@@ -639,6 +631,8 @@ public class Main extends Application {
 
 
         }
+
+         */
 
 
 
@@ -682,10 +676,11 @@ public class Main extends Application {
         stringBuilder.append(confidenceCombinations+"\n");
         informeUser();
 
+        //I don't think this function is needed again
+        //isolateRespetiveUsers();
+
+
         //DETERMINING THE MINIMUM TIMEDIFFERENCE AMONG THE RULES
-        isolateRespetiveUsers();
-
-
         setTimeFrames(confidenceObjects);
         saveMinTimeDifference();
         pruneTimeDiff(confidenceObjects);
@@ -729,8 +724,8 @@ public class Main extends Application {
             stringBuilder.append("PrefAndPos:"+ c.prefAndPos+"\n");
             stringBuilder.append("Buying:"+c.postfix+" -------> Also Buying:"+c.prefix+" with Confidence:"+
                     c.confidenceValue+"\n");
-            stringBuilder.append("\nPrefix TimeFrame:"+c.prefTimeFrame+"\n");
-            stringBuilder.append("Postfix TimeFrame:"+c.posTimeFrame+"\n");
+            //stringBuilder.append("\nPrefix TimeFrame:"+c.prefTimeFrame+"\n");
+            //stringBuilder.append("Postfix TimeFrame:"+c.posTimeFrame+"\n");
             stringBuilder.append("Minimum Time Diffrerence is:"+
                     c.minTimeDifference+" days!\n");
 
@@ -741,20 +736,43 @@ public class Main extends Application {
 
 
 
+        //Saving the running time for convertion and all operations
+        System.out.println("Time required for Transactional to " +
+                "Sequence Database conversion");
+        stringBuilder.append("Time required for Transactional to " +
+                "Sequence Database conversion\n");
+        System.out.println("Start of Converstion:"+conversionStart);
+        stringBuilder.append("Start of Converstion:"+conversionStart+"\n");
+        System.out.println("End of Converstion:"+conversionEnd);
+        stringBuilder.append("End of Converstion:"+conversionEnd+"\n");
+        long convertion_difference = conversionEnd.getTime() -
+                conversionStart.getTime();
+        System.out.println("It took:"+convertion_difference+" Milliseconds " +
+                "for Convertion");
+        stringBuilder.append("It took:"+convertion_difference+" Milliseconds " +
+                "for Convertion\n");
+        stringBuilder.append("------------------------------------------------\n");
 
-        System.out.println("Running Time Statistics");
-        stringBuilder.append("Running Time Statistics\n");
 
-        System.out.println("Start:"+start);
-        stringBuilder.append("Start:"+start+"\n");
+
+
+
+
+        System.out.println("Total Running Time Statistics");
+        stringBuilder.append("Total Running Time Statistics\n");
+
+        System.out.println("Start of All operations:"+start);
+        stringBuilder.append("Start of All operations:"+start+"\n");
 
         end = new Date();
 
-        System.out.println("End:"+end);
-        stringBuilder.append("End:"+end+"\n");
+        System.out.println("End of All operations:"+end);
+        stringBuilder.append("End of All operations:"+end+"\n");
         long time_difference = end.getTime() - start.getTime();
-        System.out.println("It took:"+time_difference+" Milliseconds");
-        stringBuilder.append("It took:"+time_difference+" Milliseconds\n");
+        System.out.println("It took:"+time_difference+" Milliseconds " +
+                "for All Operations");
+        stringBuilder.append("It took:"+time_difference+" Milliseconds " +
+                "for All Operations\n");
         informeUser();
 
         saveResultsToFile(stringBuilder);
