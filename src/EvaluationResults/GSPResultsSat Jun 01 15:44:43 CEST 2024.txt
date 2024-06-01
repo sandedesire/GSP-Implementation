@@ -1,0 +1,104 @@
+EFFICIENT GSP IMPLEMENTATION ON LARGE DATASET BY KOM SAMUEL @LUXEMBOURG UNIVERSITY
+
+-----------------------------------------------------------------------------------
+Header is: [InvoiceNo, StockCode, Description, Quantity, InvoiceDate, UnitPrice, CustomerID, Country]
+-----------------------------------
+Minimum Confidence:0.3
+-----------------------------------
+Minimum Support:0.15
+-----------------------------------
+Minimum Time Difference:30
+That is, every rule generated with a time diffrerence greater than 30 days will be deleted
+-----------------------------------
+Number of rows Before data cleaning:270954
+This amount of rows user Data was deleted:79177
+Number of rows After data cleaning:191777
+-----------------------------------
+-----------------------------------
+SIZE OF USER BASKET LIST:3112
+-----------------------------------
+Now Running the GSP Algorithm...Might take some time!
+-----------------------------------
+Checking all users item to timestamp and timestamp to item
+General Statistics After Round 1
+Sub Sequence of form:[REGENCY CAKESTAND 3 TIER] has Support: 0.19987147
+Sub Sequence of form:[WHITE HANGING HEART T-LIGHT HOLDER] has Support: 0.20565553
+Sub Sequence of form:[PARTY BUNTING] has Support: 0.17255785
+----------------------------------------------------------
+General Statistics After Round 2
+----------------------------------------------------------
+General Statistics After Round 3
+----------------------------------------------------------
+General Statistics After Round 4
+----------------------------------------------------------
+General Statistics After Round 5
+----------------------------------------------------------
+The Winning Subsequence(s) is/are of Form:
+Sequence of Form: [REGENCY CAKESTAND 3 TIER] has support: 0.19987147
+Sequence of Form: [WHITE HANGING HEART T-LIGHT HOLDER] has support: 0.20565553
+Sequence of Form: [PARTY BUNTING] has support: 0.17255785
+We are Calculating Confidence using the items:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+Creating the Confidence Objects...
+Combining Prefix and Postfix in a set
+------------------------------------------------
+Calculating Confidence
+[[WHITE HANGING HEART T-LIGHT HOLDER], [REGENCY CAKESTAND 3 TIER], [PARTY BUNTING], [WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER], [WHITE HANGING HEART T-LIGHT HOLDER, PARTY BUNTING], [REGENCY CAKESTAND 3 TIER, PARTY BUNTING], [WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER, PARTY BUNTING]]
+There are:7 rules generated.
+
+Prefix:[WHITE HANGING HEART T-LIGHT HOLDER]
+Postfix:[PARTY BUNTING]
+PrefAndPos:[WHITE HANGING HEART T-LIGHT HOLDER, PARTY BUNTING]
+Buying:[PARTY BUNTING] -------> Also Buying:[WHITE HANGING HEART T-LIGHT HOLDER] with Confidence:0.3426443
+Minimum Time Diffrerence is:2 days!
+------------------------------------------------
+
+Prefix:[WHITE HANGING HEART T-LIGHT HOLDER]
+Postfix:[REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+PrefAndPos:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+Buying:[REGENCY CAKESTAND 3 TIER, PARTY BUNTING] -------> Also Buying:[WHITE HANGING HEART T-LIGHT HOLDER] with Confidence:0.37894738
+Minimum Time Diffrerence is:2 days!
+------------------------------------------------
+
+Prefix:[REGENCY CAKESTAND 3 TIER]
+Postfix:[PARTY BUNTING]
+PrefAndPos:[REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+Buying:[PARTY BUNTING] -------> Also Buying:[REGENCY CAKESTAND 3 TIER] with Confidence:0.3538175
+Minimum Time Diffrerence is:2 days!
+------------------------------------------------
+
+Prefix:[REGENCY CAKESTAND 3 TIER]
+Postfix:[WHITE HANGING HEART T-LIGHT HOLDER, PARTY BUNTING]
+PrefAndPos:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+Buying:[WHITE HANGING HEART T-LIGHT HOLDER, PARTY BUNTING] -------> Also Buying:[REGENCY CAKESTAND 3 TIER] with Confidence:0.39130434
+Minimum Time Diffrerence is:8 days!
+------------------------------------------------
+
+Prefix:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER]
+Postfix:[WHITE HANGING HEART T-LIGHT HOLDER, PARTY BUNTING]
+PrefAndPos:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+Buying:[WHITE HANGING HEART T-LIGHT HOLDER, PARTY BUNTING] -------> Also Buying:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER] with Confidence:0.39130434
+Minimum Time Diffrerence is:8 days!
+------------------------------------------------
+
+Prefix:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER]
+Postfix:[REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+PrefAndPos:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+Buying:[REGENCY CAKESTAND 3 TIER, PARTY BUNTING] -------> Also Buying:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER] with Confidence:0.37894738
+Minimum Time Diffrerence is:2 days!
+------------------------------------------------
+
+Prefix:[REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+Postfix:[WHITE HANGING HEART T-LIGHT HOLDER, PARTY BUNTING]
+PrefAndPos:[WHITE HANGING HEART T-LIGHT HOLDER, REGENCY CAKESTAND 3 TIER, PARTY BUNTING]
+Buying:[WHITE HANGING HEART T-LIGHT HOLDER, PARTY BUNTING] -------> Also Buying:[REGENCY CAKESTAND 3 TIER, PARTY BUNTING] with Confidence:0.39130434
+Minimum Time Diffrerence is:6 days!
+------------------------------------------------
+Time required for Transactional to Sequence Database conversion
+Start of Converstion:Sat Jun 01 15:45:31 CEST 2024
+End of Converstion:Sat Jun 01 15:45:51 CEST 2024
+It took:20468 Milliseconds for Convertion
+------------------------------------------------
+Total Running Time Statistics
+Start of All operations:Sat Jun 01 15:44:43 CEST 2024
+End of All operations:Sat Jun 01 15:45:52 CEST 2024
+It took:69553 Milliseconds for All Operations

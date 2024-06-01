@@ -802,7 +802,9 @@ public class Main extends Application {
                     String.valueOf(minTimeDiff),
                     String.valueOf(confidenceObjects.size()),
                     String.valueOf(convertion_difference),
-                    String.valueOf(time_difference)};
+                    String.valueOf(time_difference),
+                    resultFile.getName().toString()
+            };
 
 
             //Writing data to the csv file

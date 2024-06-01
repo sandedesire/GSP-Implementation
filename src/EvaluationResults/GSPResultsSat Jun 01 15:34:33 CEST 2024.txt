@@ -1,0 +1,51 @@
+EFFICIENT GSP IMPLEMENTATION ON LARGE DATASET BY KOM SAMUEL @LUXEMBOURG UNIVERSITY
+
+-----------------------------------------------------------------------------------
+Header is: [InvoiceNo, StockCode, Description, Quantity, InvoiceDate, UnitPrice, CustomerID, Country]
+-----------------------------------
+Minimum Confidence:0.3
+-----------------------------------
+Minimum Support:0.15
+-----------------------------------
+Minimum Time Difference:30
+That is, every rule generated with a time diffrerence greater than 30 days will be deleted
+-----------------------------------
+Number of rows Before data cleaning:54190
+This amount of rows user Data was deleted:20405
+Number of rows After data cleaning:33785
+-----------------------------------
+-----------------------------------
+SIZE OF USER BASKET LIST:1090
+-----------------------------------
+Now Running the GSP Algorithm...Might take some time!
+-----------------------------------
+Checking all users item to timestamp and timestamp to item
+General Statistics After Round 1
+Sub Sequence of form:[WHITE HANGING HEART T-LIGHT HOLDER] has Support: 0.18165137
+----------------------------------------------------------
+General Statistics After Round 2
+----------------------------------------------------------
+General Statistics After Round 3
+----------------------------------------------------------
+General Statistics After Round 4
+----------------------------------------------------------
+General Statistics After Round 5
+----------------------------------------------------------
+The Winning Subsequence(s) is/are of Form:
+Sequence of Form: [WHITE HANGING HEART T-LIGHT HOLDER] has support: 0.18165137
+We are Calculating Confidence using the items:[WHITE HANGING HEART T-LIGHT HOLDER]
+Creating the Confidence Objects...
+Combining Prefix and Postfix in a set
+------------------------------------------------
+Calculating Confidence
+[[WHITE HANGING HEART T-LIGHT HOLDER]]
+There are:0 rules generated.
+Time required for Transactional to Sequence Database conversion
+Start of Converstion:Sat Jun 01 15:34:57 CEST 2024
+End of Converstion:Sat Jun 01 15:34:58 CEST 2024
+It took:1120 Milliseconds for Convertion
+------------------------------------------------
+Total Running Time Statistics
+Start of All operations:Sat Jun 01 15:34:33 CEST 2024
+End of All operations:Sat Jun 01 15:34:58 CEST 2024
+It took:25608 Milliseconds for All Operations

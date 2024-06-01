@@ -13,7 +13,7 @@ public class LoggingFile {
         CSVWriter cw = new CSVWriter(new FileWriter(csvFile));
         String header[] = {"Dataset", "Number of entries", "Min. Support",
         "Min. Confidence","Min. TimeDiff","Number of Rules Generated",
-                "TransactionalToSequenceTime", "TotalRunningTime"};
+                "TransactionalToSequenceTime", "TotalRunningTime","Result File"};
 
         //Writing data to the csv file
         cw.writeNext(header);

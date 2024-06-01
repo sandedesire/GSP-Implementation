@@ -1,0 +1,51 @@
+EFFICIENT GSP IMPLEMENTATION ON LARGE DATASET BY KOM SAMUEL @LUXEMBOURG UNIVERSITY
+
+-----------------------------------------------------------------------------------
+Header is: [InvoiceNo, StockCode, Description, Quantity, InvoiceDate, UnitPrice, CustomerID, Country]
+-----------------------------------
+Minimum Confidence:0.4
+-----------------------------------
+Minimum Support:0.2
+-----------------------------------
+Minimum Time Difference:30
+That is, every rule generated with a time diffrerence greater than 30 days will be deleted
+-----------------------------------
+Number of rows Before data cleaning:541909
+This amount of rows user Data was deleted:138187
+Number of rows After data cleaning:403722
+-----------------------------------
+-----------------------------------
+SIZE OF USER BASKET LIST:4370
+-----------------------------------
+Now Running the GSP Algorithm...Might take some time!
+-----------------------------------
+Checking all users item to timestamp and timestamp to item
+General Statistics After Round 1
+Sub Sequence of form:[REGENCY CAKESTAND 3 TIER] has Support: 0.20297483
+----------------------------------------------------------
+General Statistics After Round 2
+----------------------------------------------------------
+General Statistics After Round 3
+----------------------------------------------------------
+General Statistics After Round 4
+----------------------------------------------------------
+General Statistics After Round 5
+----------------------------------------------------------
+The Winning Subsequence(s) is/are of Form:
+Sequence of Form: [REGENCY CAKESTAND 3 TIER] has support: 0.20297483
+We are Calculating Confidence using the items:[REGENCY CAKESTAND 3 TIER]
+Creating the Confidence Objects...
+Combining Prefix and Postfix in a set
+------------------------------------------------
+Calculating Confidence
+[[REGENCY CAKESTAND 3 TIER]]
+There are:0 rules generated.
+Time required for Transactional to Sequence Database conversion
+Start of Converstion:Sat Jun 01 16:52:27 CEST 2024
+End of Converstion:Sat Jun 01 16:53:22 CEST 2024
+It took:55684 Milliseconds for Convertion
+------------------------------------------------
+Total Running Time Statistics
+Start of All operations:Sat Jun 01 16:51:12 CEST 2024
+End of All operations:Sat Jun 01 16:53:24 CEST 2024
+It took:131551 Milliseconds for All Operations
