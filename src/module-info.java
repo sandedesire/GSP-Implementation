@@ -7,6 +7,7 @@ module GSPImplementation {
     requires javafx.web;
     requires javafx.fxml;
     requires jdk.jsobject;
+    requires com.opencsv;
 
 
     opens GSPImplementation to javafx.base,javafx.graphics,javafx.controls;

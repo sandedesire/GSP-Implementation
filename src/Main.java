@@ -1,5 +1,6 @@
 package GSPImplementation;
 
+import com.opencsv.CSVWriter;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.StringExpression;
@@ -65,6 +66,8 @@ public class Main extends Application {
     public  String pathToResult;
     public  static StringBuilder stringBuilder = new StringBuilder();
     public  DateFormat df = new SimpleDateFormat("dd-MM-yyyy hh:mm");
+    public  DateFormat df1 = new SimpleDateFormat("dd-MM-yyyy ");
+
 
     public   int UserIDColumn ;
     public   int ItemColumn;
@@ -81,6 +84,8 @@ public class Main extends Application {
     public   float minSup;
     public   float minConf;
     public   int minTimeDiff;
+
+    public   int deleted;
 
     public   List<Map<String,List<String>>>  winnersToTimeStamp = new ArrayList<>();
 
@@ -510,9 +515,9 @@ public class Main extends Application {
 
 
 
-                UserData userData = new UserData(entry[UserIDColumn],
-                        entry[ItemColumn],
-                        entry[TimeStampColumn]);
+                UserData userData = new UserData(String.valueOf(entry[UserIDColumn]),
+                        String.valueOf(entry[ItemColumn]),
+                        String.valueOf(entry[TimeStampColumn]));
 
 
                 database.add(userData);
@@ -562,6 +567,12 @@ public class Main extends Application {
         System.out.println("Number of rows Before data cleaning:"+database.size());
         stringBuilder.append("Number of rows Before data cleaning:"+database.size()+"\n");
         dataCleaning(database);
+        if(database.size() == 0){
+            stringBuilder.append("The format of the Column used for " +
+                    "Invoice Date might not  be " +
+                    "appropriate. \nUse the format dd-MM-yy hh:mm " +
+                    " or dd/MM/yy hh:mm for the Invoice Date column\n");
+        }
         System.out.println("Number of rows After data cleaning:"+database.size());
         stringBuilder.append("Number of rows After data cleaning:"+database.size()+"\n");
         stringBuilder.append("-----------------------------------\n");
@@ -605,8 +616,8 @@ public class Main extends Application {
                 userBasketDatabase);
         conversionEnd = new Date();
         System.out.println("VERIFICATION AFTER UNIQUENESS ITEMS AND TIMESTAMP");
-        System.out.println(userBasketDatabase.get(2).getAllItemsEverBought());
-        System.out.println(userBasketDatabase.get(2).getUsersTimeStamp());
+        //System.out.println(userBasketDatabase.get(2).getAllItemsEverBought());
+        //System.out.println(userBasketDatabase.get(2).getUsersTimeStamp());
         informeUser();
 
 
@@ -779,6 +790,33 @@ public class Main extends Application {
 
         informeUser();
 
+        //Save Logging Information for Performance Analysis
+        try{
+            String csvFile = "logging.csv";
+            CSVWriter cw = new CSVWriter(new FileWriter(csvFile,true));
+
+            String value[] = {resourceFile.getName().toString(),
+                    String.valueOf(database.size()),
+                    String.valueOf(minSup),
+                    String.valueOf(minConf),
+                    String.valueOf(minTimeDiff),
+                    String.valueOf(confidenceObjects.size()),
+                    String.valueOf(convertion_difference),
+                    String.valueOf(time_difference)};
+
+
+            //Writing data to the csv file
+            cw.writeNext(value);
+
+            //close the file
+            cw.close();
+
+        }catch(IOException e){
+
+        }
+
+
+
 
     }
 
@@ -818,8 +856,8 @@ public class Main extends Application {
 
     public  void setUniqueIDsAndItemsAndTimestamp(List<UserData> database){
         for(UserData x : database){
-            uniqueIDs.add(x.getUserID());
-            uniqueITems.add(x.getItemDescription());
+            uniqueIDs.add(x.getUserID().toString().trim());
+            uniqueITems.add(x.getItemDescription().toString().trim());
             //uniqueTimestamp.add(x.getTimeStamp());
         }
     }
@@ -1207,8 +1245,6 @@ public class Main extends Application {
             conf.confidenceValue = (float)(subConditionalProbability(conf.prefAndPos) / subConditionalProbability(conf.postfix));
         }
         pruneConf(confidenceObjects);
-        System.out.println("There are:"+confidenceObjects.size()+" rules generated.");
-        stringBuilder.append("There are:"+confidenceObjects.size()+" rules generated.\n");
 
 
 
@@ -1230,6 +1266,8 @@ public class Main extends Application {
             //System.out.println("Element Deleted is: "+ y.itemsJoined);
             sequences.remove(y);
         }
+        deleted+= toDelete.size();
+
 
     }
 
@@ -1358,6 +1396,8 @@ public class Main extends Application {
 
         for(UserData user : database){
             try {
+                user.timeStamp =
+                        user.getTimeStamp().replaceAll("/","-");
                 Date date = df.parse(user.getTimeStamp());
 
 
@@ -1506,6 +1546,8 @@ public class Main extends Application {
             //System.out.println("Element Deleted is: "+ y.itemsJoined);
             sequences.remove(y);
         }
+        deleted+= toDelete.size();
+
 
     }
 
@@ -1524,6 +1566,10 @@ public class Main extends Application {
             //System.out.println("Element Deleted is: "+ y.itemsJoined);
             sequences.remove(y);
         }
+        deleted+= toDelete.size();
+        System.out.println("There are:"+confidenceObjects.size()+" rules generated.");
+        stringBuilder.append("There are:"+confidenceObjects.size()+" rules generated.\n");
+
 
 
 

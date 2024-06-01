@@ -3,7 +3,7 @@ package GSPImplementation;
 public class UserData {
     private String userID;
     private String itemDescription;
-    private String timeStamp;
+    public String timeStamp;
 
     public UserData(String userID, String itemDescription, String timeStamp) {
         this.userID = userID;
