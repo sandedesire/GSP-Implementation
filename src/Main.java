@@ -567,6 +567,8 @@ public class Main extends Application {
         System.out.println("Number of rows Before data cleaning:"+database.size());
         stringBuilder.append("Number of rows Before data cleaning:"+database.size()+"\n");
         dataCleaning(database);
+        //ADD The Minimum Time Window Frame
+
         if(database.size() == 0){
             stringBuilder.append("The format of the Column used for " +
                     "Invoice Date might not  be " +
